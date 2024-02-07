@@ -1,0 +1,20 @@
+[package]
+name = "md_code"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+serde = {workspace = true}
+xyz-tools = {workspace = true}
+rayon = { workspace = true }
+plotly = {workspace = true}
+plotters = "0.3.3"
+
+[lints]
+workspace = true
+
+[features]
+default = ["png"]
+png = ["plotly/kaleido"]

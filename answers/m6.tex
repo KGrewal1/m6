@@ -1,0 +1,271 @@
+
+\documentclass[a4paper, 12pt]{article}
+\usepackage[]{graphicx}
+\usepackage[]{color}
+
+\makeatletter
+\def\maxwidth{ %
+	\ifdim\Gin@nat@width>\linewidth
+	\linewidth
+	\else
+	\Gin@nat@width
+	\fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%6
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+\let\hlipl\hlkwb
+
+\usepackage{soul}
+\usepackage{framed}
+
+\makeatletter
+\newenvironment{kframe}{%
+	\def\at@end@of@kframe{}%
+	\ifinner\ifhmode%
+	\def\at@end@of@kframe{\end{minipage}}%
+\begin{minipage}{\columnwidth}%
+	\fi\fi%
+	\def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+		\colorbox{shadecolor}{##1}\hskip-\fboxsep
+		% There is no \\@totalrightmargin, so:
+		\hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+	\MakeFramed {\advance\hsize-\width
+		\@totalleftmargin\z@ \linewidth\hsize
+		\@setminipage}}%
+{\par\unskip\endMakeFramed%
+	\at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+
+%\usepackage[ascii]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb,amsfonts,textcomp}
+\usepackage[T1]{fontenc}
+\usepackage[german,french,english]{babel}
+\usepackage{array}
+\usepackage{hhline}
+\usepackage{hyperref}
+\usepackage{alltt}
+\usepackage[version=4]{mhchem}
+\usepackage[margin=0.75in]{geometry}
+%\usepackage[format=plain, labelfont={bf,it}, textfont=it, margin=1in]{caption}
+\usepackage{subcaption}
+\usepackage{graphicx}
+%\usepackage{subfig}
+\usepackage[format=plain, labelfont={bf}, textfont=it, margin=1in]{caption}
+\graphicspath{ {./images/} }
+%\usepackage{sidecap}
+%\usepackage{svg}
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+%\usepackage{titlesec} %For section title spacing
+\usepackage{enumitem} % for the hanging description
+\usepackage{color}
+\usepackage[english]{babel}
+\usepackage{bm}
+\usepackage{wasysym}
+\usepackage{natbib}
+
+\usepackage{comment}
+\usepackage{pgfplots}
+\usepackage{multirow}
+\usepackage{textgreek}
+% Bibliography
+\usepackage[utf8]{inputenc}
+%\usepackage[backend=bibtex,bibencoding=ascii]{biblatex}
+%\usepackage[backend=biber]{biblatex}
+%\addbibresource{SpecBiblo.bib}
+%\usepackage{csquotes} % It is recommended to use csquotes when using babel with biblatex
+\usepackage{pdflscape}
+\usepackage{braket}
+\usepackage{siunitx}
+%\usepackage{esint}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Date, Title, Subject, No
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Set Date
+\usepackage{pgfcalendar}
+\usepackage{datetime2}
+\usepackage{datetime2-calc}
+\DTMsavedate{MyDate}{2024-02-06}\DTMmakeglobal{MyDate}
+%Set Subject
+\newcommand{\Subject}{M6}
+%Set Type
+\newcommand{\Type}{Supervision}
+%Set Number
+\newcommand{\Iteration}{1}
+%For out of uni work
+\newcommand{\FullAuthor}{Kirpal Grewal\\\href{mailto:kg488@cam.ac.uk}{\color{black}kg488@cam.ac.uk}\\St Catharine's College\\University of Cambridge}
+%For practicals,out of collge work
+\newcommand{\LongAuthor}{Kirpal Grewal\\\href{mailto:kg488@cam.ac.uk}{\color{black}kg488}\\St Catharine's College}
+%For supervisions
+\newcommand{\ShortAuthor}{Kirpal Grewal}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Full Title: change here if not for Supo work/practicals
+\newcommand{\MyTitle}{\Subject{ }\Type{ }\Iteration{ }}
+
+
+
+
+% Set up references for pdf
+\hypersetup{
+	colorlinks=true,
+	linkcolor=black,
+	citecolor=black,
+	filecolor=blue,
+	urlcolor=blue,
+	pdftitle={\MyTitle},
+	pdfauthor={Kirpal Grewal},
+	pdfsubject={Natural Science, Homework},
+	pdfkeywords={Chemistry, Natural Sciences}
+}
+
+\hyphenation{Marvin-Sketch}
+\pagestyle{fancyplain}
+\rhead{}
+\lhead{}
+\lhead{Kirpal Grewal, \href{mailto:kg488@cam.ac.uk}{\color{black}kg488@cam.ac.uk}}
+\rhead{\MyTitle}
+\lfoot{\DTMfetchday{MyDate}{ }\DTMenglishmonthname{\DTMfetchmonth{MyDate}}{ }\DTMfetchyear{MyDate}}
+
+\rfoot{Page \thepage\ of \pageref{LastPage}}
+\cfoot{ }
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+
+% footnotes configuration
+\makeatletter
+\renewcommand\thefootnote{\arabic{footnote}}
+\makeatother
+% Text styles
+\newcommand\textstyleFootnoteReference[1]{\textsuperscript{#1}}
+% Outline numbering
+\setcounter{secnumdepth}{0}
+
+
+\newcommand\liststyleLFOiii{%
+	\renewcommand\labelitemi{{\textbullet}}
+	\renewcommand\labelitemii{o}
+	\renewcommand\labelitemiii{${\blacksquare}$}
+	\renewcommand\labelitemiv{{\textbullet}}
+}
+\newcommand\liststyleLFOii{%
+	\renewcommand\labelitemi{{\textbullet}}
+	\renewcommand\labelitemii{o}
+	\renewcommand\labelitemiii{${\blacksquare}$}
+	\renewcommand\labelitemiv{{\textbullet}}
+}
+
+\newcommand{\snt}[1]{\textcolor{magenta}{#1}} % edited by Sergei
+\newcommand{\crsid}[1]{\textcolor{red}{#1}} % edited by crsid
+\newcommand{\sntdel}[1]{\textcolor{green}{\sout{#1}}} % deleted by Sergei
+
+\newcommand{\problem}[1]{\subsection*{#1}
+	\setcounter{equation}{0}}
+\newcommand{\question}[1]{\problem{Q. #1}}
+
+
+\DeclareMathOperator{\sech}{sech}
+\DeclareMathOperator{\csch}{csch}
+\DeclareMathOperator{\arcsec}{arcsec}
+\DeclareMathOperator{\arccot}{arccot}
+\DeclareMathOperator{\arccsc}{arccsc}
+\DeclareMathOperator{\arcosh}{arcosh}
+\DeclareMathOperator{\arsinh}{arsinh}
+\DeclareMathOperator{\artanh}{artanh}
+\DeclareMathOperator{\arsech}{arsech}
+\DeclareMathOperator{\arcsch}{arcsch}
+\DeclareMathOperator{\arcoth}{arcoth}
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\adj}{adj}
+\DeclareMathOperator{\drv}{d}
+\DeclareMathOperator{\trace}{tr}
+\DeclareMathOperator{\Prob}{P}
+\newcommand*{\Perm}[2]{{}^{#1}\!P_{#2}}%
+\newcommand*{\Comb}[2]{{}^{#1}C_{#2}}%
+
+
+
+
+\title{Natural Sciences Tripos \MyTitle}
+\author{\ShortAuthor}
+
+\date{{\DTMusedate{MyDate}}}
+
+\begin{document}
+\maketitle
+
+\question{1.1}
+\begin{flalign*}
+	\bm{P}&=\sum_{i=1}^{N}\bm{p}_{i}\\
+	\frac{d \bm{p}_{i}}{d t} &=-\sum_{j\neq i}^{N}\frac{du(r_{ij})}{d_{r}}\frac{\bm{r}_{i}-\bm{r}_{j}}{r_{ij}}\\
+	\intertext{ie the sum of all pairwise forces acting on the molecule}
+	\frac{d \bm{P}}{d t}&= \frac{d \bm{p}_{i}}{d t}\\
+	\intertext{consider particles $m$ and $n$ and their force on each other}
+	\frac{d \bm{p}_{m}}{d t} &=-\frac{du(r_{nm})}{d_{r}}\frac{\bm{r}_{n}-\bm{r}_{m}}{r_{nm}}\\
+	\frac{d \bm{p}_{m}}{d t} &=-\frac{du(r_{mn})}{d_{r}}\frac{\bm{r}_{m}-\bm{r}_{n}}{r_{mn}}\\
+	\intertext{It can be seen that these have the same magnitude but oopposite direction and cancel each other out in the contribution to the overall potential: as we have assumed nothing about $n$ and $m$ this cancellation holds for all pairs of particles and the overall momentum of the system is time invariant}
+	\intertext{This follows from Noether's theorem as the system is invariant upon translation, the symmetry corresponding to conservation of the momentum of the system}
+\end{flalign*}
+\clearpage
+\question{1.2}
+For the leapfrog algorithm:
+\begin{flalign*}
+	\bm{v}_{i}(t+\delta t /2) &=\bm{v}_{i}(t-\delta t/2)+\frac{\delta t}{m_{i}}\bm{f}_{i}(t)\\
+	\bm{r}_{i}(t+\delta t) &= \bm{r}_{i}(t)+\bm{v}_{i}(t+\delta t/2)\delta t
+\end{flalign*}
+
+\begin{flalign*}
+	\bm{r}_{i}(t+\delta t) &= \bm{r}_{i}(t)+\bm{v}_{i}(t+\delta t/2)\delta t\\
+	\bm{r}_{i}(t) &= \bm{r}_{i}(t-\delta t)+\bm{v}_{i}(t-\delta t/2)\delta t\\
+	\bm{r}_{i}(t+\delta t)-\bm{r}_{i}(t) &= \bm{r}_{i}(t)- \bm{r}_{i}(t-\delta t)+(\bm{v}_{i}(t+\delta t/2)-\bm{v}_{i}(t-\delta t/2))\delta t\\
+	\intertext{And substituting in the velocity change from the algorithm}
+	\bm{r}_{i}(t+\delta t)-\bm{r}_{i}(t) &= \bm{r}_{i}(t)- \bm{r}_{i}(t-\delta t)+\frac{\delta t^{2}}{m_{i}}\bm{f}_{i}(t)\\
+	\intertext{The velocity Verlet}
+\end{flalign*}
+
+\question{1.3}
+a
+\begin{flalign*}
+	\braket{A(t)}&=\lim_{\tau\to \infty}\frac{1}{\tau}\int_{0}^{\tau}\cos( \omega t) d t\\
+	&=\lim_{\tau\to \infty}\frac{1}{\omega\tau }\sin \omega \tau \\
+	&=0\\
+	\braket{A(t)^{2}}&=\lim_{\tau\to \infty}\frac{1}{\tau}\int_{0}^{\tau}\cos( \omega t)^{2} d t\\
+	&=\lim_{\tau\to \infty}\frac{1}{4\omega\tau }\left(2\tau +\sin(2\tau\omega)\right) \\
+	&=\frac{1}{2}\\
+	C_{AA}(t-t')&=\braket{\cos (\omega t))(\cos (\omega t')}\\
+	C_{AA}(\tau)&=\frac{1}{t}\int_{0}^{\infty}\cos (\omega t)(\cos (\omega (t-\tau)))dt\\
+	&=\frac{1}{t}\left[\frac{1}{2}t\cos(\omega \tau)-\frac{\sin(\omega(\tau - 2t))}{4\omega}\right]\\
+	\intertext{Again the term in $\sin$ vanishes in the limit leaving}
+	&=\frac{1}{2}\cos(\omega \tau)\\
+\end{flalign*}
+b
+\begin{flalign*}
+	\intertext{For any superposition of harmonic modes it is clear the time average will be 0}
+	C_{AA}(\tau)&=\frac{1}{t}\int_{0}^{\infty}(a_{1}\cos (\omega_{1} t)+a_{2}\cos (\omega_{2} t))(a_{1}\cos (\omega_{1} (t-\tau))+a_{2}\cos (\omega_{2} (t-\tau)))dt\\
+	&=\frac{a_{1}^{2}}{2}\cos(\omega_{1} \tau)+\frac{a_{2}^{2}}{2}\cos(\omega_{2} \tau)+\frac{a_{1}a_{2}}{t}\int_{0}^{\infty}(\cos (\omega_{1} t)\cos (\omega_{2} (t-\tau)))+(\cos (\omega_{1} (t-\tau))\cos (\omega_{2} t))dt\\
+	\intertext{Using the orthogonality of sinusoidal functions of different frequencies, this integral is 0 in the limit}
+	&=\frac{a_{1}^{2}}{2}\cos(\omega_{1} \tau)+\frac{a_{2}^{2}}{2}\cos(\omega_{2} \tau)\\
+\end{flalign*}
+\end{document}

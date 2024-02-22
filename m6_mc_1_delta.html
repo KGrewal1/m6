@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+</head>
+
+<body>
+    <div>
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+        <script src="https://cdn.plot.ly/plotly-2.12.1.min.js"></script>
+        <div id="plotly-html-element" class="plotly-graph-div" style="height:100%; width:100%;"></div>
+
+        <script type="module">
+            const graph_div = document.getElementById("plotly-html-element");
+            await Plotly.newPlot(graph_div, {
+  "data": [
+    {
+      "type": "scatter",
+      "name": "MC delta",
+      "x": [
+        0.1,
+        0.2,
+        0.30000000000000004,
+        0.4,
+        0.5,
+        0.6000000000000001,
+        0.7000000000000001,
+        0.8,
+        0.9,
+        1.0,
+        1.1,
+        1.2000000000000002,
+        1.3,
+        1.4000000000000001,
+        1.5,
+        1.6,
+        1.7000000000000002,
+        1.8,
+        1.9000000000000001,
+        2.0
+      ],
+      "y": [
+        -0.021206944769973646,
+        -0.002879765873542439,
+        0.0016410066028806902,
+        0.0023528180026328727,
+        0.001748757230125797,
+        0.001916344683514426,
+        0.0009166162746013784,
+        0.0005271390048138258,
+        0.0004042895317071249,
+        0.0004207730854527414,
+        0.0005373410005820034,
+        0.00021711928973355832,
+        0.00018799947772507597,
+        0.00005758210202611025,
+        -0.000016316775293345742,
+        -0.00008955099807972378,
+        -0.0001125825634159805,
+        0.00007629350314014571,
+        0.00007777573799747084,
+        0.00007599726282153663
+      ]
+    }
+  ],
+  "layout": {
+    "title": {
+      "text": "Photon gas"
+    },
+    "xaxis": {
+      "title": {
+        "text": "Beta"
+      }
+    },
+    "yaxis": {
+      "title": {
+        "text": "\u003cnj\u003e difference"
+      }
+    }
+  },
+  "config": {}
+});
+        </script>
+    </div>
+</body>
+
+</html>

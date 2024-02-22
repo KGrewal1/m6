@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+</head>
+
+<body>
+    <div>
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+        <script src="https://cdn.plot.ly/plotly-2.12.1.min.js"></script>
+        <div id="plotly-html-element" class="plotly-graph-div" style="height:100%; width:100%;"></div>
+
+        <script type="module">
+            const graph_div = document.getElementById("plotly-html-element");
+            await Plotly.newPlot(graph_div, {
+  "data": [
+    {
+      "type": "scatter",
+      "name": "Diffuson of B",
+      "x": [
+        264,
+        276,
+        288,
+        300
+      ],
+      "y": [
+        31.24,
+        28.465833333333336,
+        24.068055555555553,
+        16.90527777777778
+      ]
+    }
+  ],
+  "layout": {
+    "title": {
+      "text": "Mean contact number of polymer"
+    },
+    "xaxis": {
+      "title": {
+        "text": "Temp / K"
+      }
+    },
+    "yaxis": {
+      "title": {
+        "text": "Mean Contact Number"
+      }
+    }
+  },
+  "config": {}
+});
+        </script>
+    </div>
+</body>
+
+</html>

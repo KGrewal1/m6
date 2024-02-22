@@ -24,6 +24,10 @@ fn main() {
     let m6_files = m6_dir.join("enviar");
     let now_global = Instant::now();
 
+    let plots_dir = Path::new("plots");
+    if !plots_dir.exists() {
+        fs::create_dir(plots_dir).expect("Unable to create directory");
+    }
     // --------------------------------
     // 2.1 RDF of an ideal gas
     // --------------------------------
@@ -47,8 +51,14 @@ fn main() {
         plot.set_layout(layout);
         plot.add_trace(trace);
         #[cfg(feature = "png")]
-        plot.write_image("m6_ex2_1.png", ImageFormat::PNG, 800, 600, 1.0);
-        plot.write_html("m6_ex2_1.html");
+        plot.write_image(
+            plots_dir.join("m6_ex2_1.png"),
+            ImageFormat::PNG,
+            800,
+            600,
+            1.0,
+        );
+        plot.write_html(plots_dir.join("m6_ex2_1.html"));
         println!("Ex 2.1 took {} ms\n", now.elapsed().as_millis());
     }
 
@@ -74,8 +84,14 @@ fn main() {
         plot.set_layout(layout);
         plot.add_trace(trace);
         #[cfg(feature = "png")]
-        plot.write_image("m6_ex2_2_a.png", ImageFormat::PNG, 800, 600, 1.0);
-        plot.write_html("m6_ex2_2_a.html");
+        plot.write_image(
+            plots_dir.join("m6_ex2_2_a.png"),
+            ImageFormat::PNG,
+            800,
+            600,
+            1.0,
+        );
+        plot.write_html(plots_dir.join("m6_ex2_2_a.html"));
 
         let (r, g_r) = systems.rdf(Some((1, 2)), 1000, 15.);
 
@@ -88,8 +104,14 @@ fn main() {
         plot.set_layout(layout);
         plot.add_trace(trace);
         #[cfg(feature = "png")]
-        plot.write_image("m6_ex2_2_b.png", ImageFormat::PNG, 800, 600, 1.0);
-        plot.write_html("m6_ex2_2_b.html");
+        plot.write_image(
+            plots_dir.join("m6_ex2_2_b.png"),
+            ImageFormat::PNG,
+            800,
+            600,
+            1.0,
+        );
+        plot.write_html(plots_dir.join("m6_ex2_2_b.html"));
         println!("Ex 2.2 took {} ms\n", now.elapsed().as_millis());
     }
 
@@ -162,8 +184,14 @@ fn main() {
             .y_axis3(Axis::new().title(Title::new("g(r)")));
         plot.set_layout(layout);
         #[cfg(feature = "png")]
-        plot.write_image("m6_ex2_3_comb.png", ImageFormat::PNG, 800, 600, 1.0);
-        plot.write_html("m6_ex2_3_comb.html");
+        plot.write_image(
+            plots_dir.join("m6_ex2_3_comb.png"),
+            ImageFormat::PNG,
+            800,
+            600,
+            1.0,
+        );
+        plot.write_html(plots_dir.join("m6_ex2_3_comb.html"));
         println!("Ex 2.3 took {} ms\n", now.elapsed().as_millis());
     }
 
@@ -239,8 +267,14 @@ fn main() {
             .y_axis(Axis::new().title(Title::new("Pressure / Joules per cubic Angstrom")));
         plot.set_layout(layout);
         #[cfg(feature = "png")]
-        plot.write_image("m6_ex4_1_a.png", ImageFormat::PNG, 800, 600, 1.0);
-        plot.write_html("m6_ex4_1_a.html");
+        plot.write_image(
+            plots_dir.join("m6_ex4_1_a.png"),
+            ImageFormat::PNG,
+            800,
+            600,
+            1.0,
+        );
+        plot.write_html(plots_dir.join("m6_ex4_1_a.html"));
 
         let (times, pressure) = systems.virial_pressure(rdphs_potential);
 
@@ -254,8 +288,14 @@ fn main() {
             .y_axis(Axis::new().title(Title::new("Pressure / Joules per cubic Angstrom")));
         plot.set_layout(layout);
         #[cfg(feature = "png")]
-        plot.write_image("m6_ex4_1_b.png", ImageFormat::PNG, 800, 600, 1.0);
-        plot.write_html("m6_ex4_1_b.html");
+        plot.write_image(
+            plots_dir.join("m6_ex4_1_b.png"),
+            ImageFormat::PNG,
+            800,
+            600,
+            1.0,
+        );
+        plot.write_html(plots_dir.join("m6_ex4_1_b.html"));
 
         println!("Ex 4.1 took {} ms\n", now.elapsed().as_millis());
     }
@@ -281,8 +321,14 @@ fn main() {
             .y_axis(Axis::new().title(Title::new("H / Joules")));
         plot.set_layout(layout);
         #[cfg(feature = "png")]
-        plot.write_image("m6_ex4_2_a.png", ImageFormat::PNG, 800, 600, 1.0);
-        plot.write_html("m6_ex4_2_a.html");
+        plot.write_image(
+            plots_dir.join("m6_ex4_2_a.png"),
+            ImageFormat::PNG,
+            800,
+            600,
+            1.0,
+        );
+        plot.write_html(plots_dir.join("m6_ex4_2_a.html"));
 
         let (times, pressure) = systems.enthalpy(phs_potential, rdphs_potential);
 
@@ -295,8 +341,14 @@ fn main() {
             .y_axis(Axis::new().title(Title::new("H / Joules")));
         plot.set_layout(layout);
         #[cfg(feature = "png")]
-        plot.write_image("m6_ex4_2_b.png", ImageFormat::PNG, 800, 600, 1.0);
-        plot.write_html("m6_ex4_2_b.html");
+        plot.write_image(
+            plots_dir.join("m6_ex4_2_b.png"),
+            ImageFormat::PNG,
+            800,
+            600,
+            1.0,
+        );
+        plot.write_html(plots_dir.join("m6_ex4_2_b.html"));
 
         println!("Ex 4.2 took {} ms\n", now.elapsed().as_millis());
     }
@@ -333,8 +385,14 @@ fn main() {
         plot.set_layout(layout);
         plot.add_trace(trace);
         #[cfg(feature = "png")]
-        plot.write_image("m6_ex5_a.png", ImageFormat::PNG, 800, 600, 1.0);
-        plot.write_html("m6_ex5_a.html");
+        plot.write_image(
+            plots_dir.join("m6_ex5_a.png"),
+            ImageFormat::PNG,
+            800,
+            600,
+            1.0,
+        );
+        plot.write_html(plots_dir.join("m6_ex5_a.html"));
         println!("Ex 5a took {} ms\n", now.elapsed().as_millis());
     }
 
@@ -367,8 +425,14 @@ fn main() {
         plot.set_layout(layout);
         plot.add_trace(trace);
         #[cfg(feature = "png")]
-        plot.write_image("m6_ex5_b.png", ImageFormat::PNG, 800, 600, 1.0);
-        plot.write_html("m6_ex5_b.html");
+        plot.write_image(
+            plots_dir.join("m6_ex5_b.png"),
+            ImageFormat::PNG,
+            800,
+            600,
+            1.0,
+        );
+        plot.write_html(plots_dir.join("m6_ex5_b.html"));
         println!("Ex 5b took {} ms\n", now.elapsed().as_millis());
     }
 
@@ -421,8 +485,14 @@ fn main() {
         plot.set_layout(layout);
         plot.add_trace(trace);
         #[cfg(feature = "png")]
-        plot.write_image("m6_ex6_1.png", ImageFormat::PNG, 800, 600, 1.0);
-        plot.write_html("m6_ex6_1.html");
+        plot.write_image(
+            plots_dir.join("m6_ex6_1.png"),
+            ImageFormat::PNG,
+            800,
+            600,
+            1.0,
+        );
+        plot.write_html(plots_dir.join("m6_ex6_1.html"));
         println!("Ex 6.1 took {} ms\n", now.elapsed().as_millis());
     }
 
@@ -458,8 +528,14 @@ fn main() {
         plot.set_layout(layout);
         plot.add_trace(trace);
         #[cfg(feature = "png")]
-        plot.write_image("m6_ex6_2_a.png", ImageFormat::PNG, 800, 600, 1.0);
-        plot.write_html("m6_ex6_2_a.html");
+        plot.write_image(
+            plots_dir.join("m6_ex6_2_a.png"),
+            ImageFormat::PNG,
+            800,
+            600,
+            1.0,
+        );
+        plot.write_html(plots_dir.join("m6_ex6_2_a.html"));
 
         let t276k: MolSystems = fs::read_to_string(m6_files.join("276K.xyz"))
             .expect("Unable to read the file")
@@ -485,8 +561,14 @@ fn main() {
         plot.set_layout(layout);
         plot.add_trace(trace);
         #[cfg(feature = "png")]
-        plot.write_image("m6_ex6_2_b.png", ImageFormat::PNG, 800, 600, 1.0);
-        plot.write_html("m6_ex6_2_b.html");
+        plot.write_image(
+            plots_dir.join("m6_ex6_2_b.png"),
+            ImageFormat::PNG,
+            800,
+            600,
+            1.0,
+        );
+        plot.write_html(plots_dir.join("m6_ex6_2_b.html"));
 
         let t288k: MolSystems = fs::read_to_string(m6_files.join("288K.xyz"))
             .expect("Unable to read the file")
@@ -512,8 +594,14 @@ fn main() {
         plot.set_layout(layout);
         plot.add_trace(trace);
         #[cfg(feature = "png")]
-        plot.write_image("m6_ex6_2_c.png", ImageFormat::PNG, 800, 600, 1.0);
-        plot.write_html("m6_ex6_2_c.html");
+        plot.write_image(
+            plots_dir.join("m6_ex6_2_c.png"),
+            ImageFormat::PNG,
+            800,
+            600,
+            1.0,
+        );
+        plot.write_html(plots_dir.join("m6_ex6_2_c.html"));
 
         let t300k: MolSystems = fs::read_to_string(m6_files.join("300K.xyz"))
             .expect("Unable to read the file")
@@ -540,8 +628,14 @@ fn main() {
         plot.set_layout(layout);
         plot.add_trace(trace);
         #[cfg(feature = "png")]
-        plot.write_image("m6_ex6_2_d.png", ImageFormat::PNG, 800, 600, 1.0);
-        plot.write_html("m6_ex6_2_d.html");
+        plot.write_image(
+            plots_dir.join("m6_ex6_2_d.png"),
+            ImageFormat::PNG,
+            800,
+            600,
+            1.0,
+        );
+        plot.write_html(plots_dir.join("m6_ex6_2_d.html"));
 
         // println!("{:?}", p_t);
         p_t.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap());
@@ -561,8 +655,14 @@ fn main() {
         plot.set_layout(layout);
         plot.add_trace(trace);
         #[cfg(feature = "png")]
-        plot.write_image("m6_ex6_2_e.png", ImageFormat::PNG, 800, 600, 1.0);
-        plot.write_html("m6_ex6_2_e.html");
+        plot.write_image(
+            plots_dir.join("m6_ex6_2_e.png"),
+            ImageFormat::PNG,
+            800,
+            600,
+            1.0,
+        );
+        plot.write_html(plots_dir.join("m6_ex6_2_e.html"));
         println!("Ex 6.2 took {} ms\n", now.elapsed().as_millis());
     }
 

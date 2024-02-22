@@ -1,4 +1,4 @@
-use std::{collections::VecDeque, time::Instant};
+use std::{collections::VecDeque, fs, path::Path, time::Instant};
 
 use quadrature::trapezoidal;
 use rayon::iter::{IntoParallelRefIterator, ParallelBridge, ParallelIterator};
@@ -9,12 +9,16 @@ mod photon_gas;
 mod quadrature;
 
 fn main() {
+    let plots_dir = Path::new("plots");
+    if !plots_dir.exists() {
+        fs::create_dir(plots_dir).expect("Unable to create directory");
+    }
     //-----------------
     // MC q 1
     //----------------
     {
         let now = Instant::now();
-        photon_gas::photon_gas();
+        photon_gas::photon_gas(plots_dir);
         println!("MC Ex 1 took {} ms\n", now.elapsed().as_millis());
     }
 

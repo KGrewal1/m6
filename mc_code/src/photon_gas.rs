@@ -4,12 +4,13 @@ use plotly::{common::Title, layout::Axis, Layout, Plot, Scatter};
 use rand::{Rng, SeedableRng};
 use rand_xoshiro::Xoshiro256StarStar;
 use rayon::prelude::*;
+use std::path::Path;
 
 const MC_STEPS: usize = 25_000_000;
 #[allow(non_upper_case_globals)]
 const e_j: f64 = 1.;
 
-pub fn photon_gas() {
+pub fn photon_gas(path: &Path) {
     let vals = (1..=20)
         .par_bridge()
         .map(|i| 0.1 * f64::from(i))
@@ -33,8 +34,8 @@ pub fn photon_gas() {
     plot.add_trace(trace_1);
     plot.add_trace(trace_2);
     #[cfg(feature = "png")]
-    plot.write_image("m6_mc_1.png", ImageFormat::PNG, 800, 600, 1.0);
-    plot.write_html("m6_mc_1.html");
+    plot.write_image(path.join("m6_mc_1.png"), ImageFormat::PNG, 800, 600, 1.0);
+    plot.write_html(path.join("m6_mc_1.html"));
 
     let mut plot = Plot::new();
     let trace_1 = Scatter::new(beta.clone(), delta).name("MC delta");
@@ -45,8 +46,14 @@ pub fn photon_gas() {
     plot.set_layout(layout);
     plot.add_trace(trace_1);
     #[cfg(feature = "png")]
-    plot.write_image("m6_mc_1_delta.png", ImageFormat::PNG, 800, 600, 1.0);
-    plot.write_html("m6_mc_1_delta.html");
+    plot.write_image(
+        path.join("m6_mc_1_delta.png"),
+        ImageFormat::PNG,
+        800,
+        600,
+        1.0,
+    );
+    plot.write_html(path.join("m6_mc_1_delta.html"));
 }
 
 // calculate the occupation number for the photon gas in a specific state

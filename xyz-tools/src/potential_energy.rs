@@ -1,6 +1,8 @@
 use crate::{Atom, MolSystem};
 use rayon::prelude::*;
 impl MolSystem {
+    /// Calculate the potential energy of the system given a pairwise potential of
+    /// atoms in the system
     pub fn potential_enegry<F: Fn(&MolSystem, &Atom, &Atom) -> f64 + Sync>(
         &self,
         potential: F,
@@ -16,18 +18,6 @@ impl MolSystem {
             })
             .sum()
     }
-
-    // pub fn random_vel(&mut self, temperature: f64) {
-    //     let mut rng = rand::thread_rng();
-    //     let boltzmann = 8.617333262145e-5; // eV/K
-    //     let mass = 1.0; // assume mass is 1
-    //     let sigma = (boltzmann * temperature / mass).sqrt();
-    //     self.atoms.iter_mut().for_each(|atom| {
-    //         atom.vx = rng.;
-    //         atom.vy = rand::distributions::Normal::new(0.0, sigma).sample(&mut rng);
-    //         atom.vz = rand::distributions::Normal::new(0.0, sigma).sample(&mut rng);
-    //     });
-    // }
 }
 
 #[cfg(test)]

@@ -1,3 +1,4 @@
+#![allow(non_upper_case_globals)]
 #[cfg(feature = "png")]
 use plotly::ImageFormat;
 use plotly::{
@@ -9,14 +10,23 @@ use rayon::prelude::*;
 use std::{fs, path::Path, time::Instant};
 use xyz_tools::{Atom, MolSystem, MolSystems};
 
-#[allow(non_upper_case_globals)]
 const k_b: f64 = 1.380649; // Joules per kelvin
 
-// all 20 A but H2O 15A
+// conversion factor from kcal to joules
+const kcal_to_j: f64 = 4184.;
+
+// for diffusion question
+const sigma_diff: f64 = 3.405; // Angstroms
+
 fn main() {
     let m6_dir = Path::new("M6_files");
     let m6_files = m6_dir.join("enviar");
     let now_global = Instant::now();
+
+    // --------------------------------
+    // 2.1 RDF of an ideal gas
+    // --------------------------------
+
     {
         let now = Instant::now();
         let systems: MolSystems = fs::read_to_string(m6_files.join("ideal.xyz"))
@@ -24,7 +34,7 @@ fn main() {
             .parse()
             .unwrap();
 
-        // we know all atoms are the same so default to not selecting for slightly faster path
+        // we know all atoms are the same so default to not selecting which atom for slightly faster path
         let (r, g_r) = systems.rdf(None, 1000, 20.);
 
         let mut plot = Plot::new();
@@ -40,6 +50,10 @@ fn main() {
         plot.write_html("m6_ex2_1.html");
         println!("Ex 2.1 took {} ms\n", now.elapsed().as_millis());
     }
+
+    // --------------------------------
+    // 2.2 RDF of bulk water
+    // --------------------------------
 
     {
         let now = Instant::now();
@@ -78,6 +92,10 @@ fn main() {
         println!("Ex 2.2 took {} ms\n", now.elapsed().as_millis());
     }
 
+    // --------------------------------
+    // 2.3 Characterising different crystal and liquid phases through their RDFs
+    // --------------------------------
+
     {
         let now = Instant::now();
         let systems: MolSystems = fs::read_to_string(m6_files.join("set1.xyz"))
@@ -91,14 +109,6 @@ fn main() {
         let trace_1 = Scatter::new(r, g_r)
             .name("Autocorrelation Function")
             .name("set1.xyz");
-        // let layout = Layout::new()
-        //     .title(Title::new("Autocorrelation of set1.xyz"))
-        //     .x_axis(Axis::new().title(Title::new("Distance (Angstroms)")))
-        //     .y_axis(Axis::new().title(Title::new("g(r)")));
-        // plot.set_layout(layout);
-        // plot.add_trace(trace_1.clone());
-
-        // plot.write_html("m6_ex2_3_a.html");
 
         let systems: MolSystems = fs::read_to_string(m6_files.join("set2.xyz"))
             .expect("Unable to read the file")
@@ -113,14 +123,6 @@ fn main() {
             .x_axis("x2")
             .y_axis("y2")
             .name("set2.xyz");
-        // let layout = Layout::new()
-        //     .title(Title::new("Autocorrelation of set2.xyz"))
-        //     .x_axis(Axis::new().title(Title::new("Distance (Angstroms)")))
-        //     .y_axis(Axis::new().title(Title::new("g(r)")));
-        // plot.set_layout(layout);
-        // plot.add_trace(trace_2.clone());
-
-        // plot.write_html("m6_ex2_3_b.html");
 
         let systems: MolSystems = fs::read_to_string(m6_files.join("set3.xyz"))
             .expect("Unable to read the file")
@@ -135,14 +137,6 @@ fn main() {
             .x_axis("x3")
             .y_axis("y3")
             .name("set3.xyz");
-        // let layout = Layout::new()
-        //     .title(Title::new("Autocorrelation of set3.xyz"))
-        //     .x_axis(Axis::new().title(Title::new("Distance (Angstroms)")))
-        //     .y_axis(Axis::new().title(Title::new("g(r)")));
-        // plot.set_layout(layout);
-        // plot.add_trace(trace_3.clone());
-
-        // plot.write_html("m6_ex2_3_c.html");
 
         let mut plot = Plot::new();
         plot.add_trace(trace_1);
@@ -159,9 +153,9 @@ fn main() {
             .height(2000)
             .width(2500)
             .title(Title::new("Autocorrelation of Sets"))
-            .x_axis3(Axis::new().title(Title::new("Distance (Angstroms)")))
+            .x_axis3(Axis::new().title(Title::new("Distance / Angstroms")))
             // .x_axis2(Axis::new().title(Title::new("Distance (Angstroms)")))
-            // .x_axis3(Axis::new().title(Title::new("Distance (Angstroms)")))
+            // .x_axis(Axis::new().title(Title::new("Distance (Angstroms)")))
             .y_axis(Axis::new().title(Title::new("g(r)")))
             .y_axis2(Axis::new().title(Title::new("g(r)")))
             .y_axis3(Axis::new().title(Title::new("g(r)")));
@@ -171,6 +165,10 @@ fn main() {
         plot.write_html("m6_ex2_3_comb.html");
         println!("Ex 2.3 took {} ms\n", now.elapsed().as_millis());
     }
+
+    // --------------------------------
+    // 3.1 Potential Energy
+    // --------------------------------
 
     {
         let now = Instant::now();
@@ -189,6 +187,10 @@ fn main() {
         println!("Ex 3.1 took {} ms\n", now.elapsed().as_millis());
     }
 
+    // --------------------------------
+    // 3.2 Kinetic Energy
+    // --------------------------------
+
     {
         let now = Instant::now();
         let mut system: MolSystem = fs::read_to_string(m6_files.join("conf.xyz"))
@@ -197,7 +199,7 @@ fn main() {
             .unwrap();
         let temp = 179.81;
         let m = 6.63e-26;
-        system.random_v(k_b, temp, m, 3624360);
+        system.random_v(k_b, temp, m, 3_624_360);
         let ke_1 = system.mean_ke(m);
 
         system.random_v(k_b, temp, m, 42);
@@ -215,6 +217,10 @@ fn main() {
         println!("Ex 3.2 took {} ms\n", now.elapsed().as_millis());
     }
 
+    // --------------------------------
+    // 4.1 Pressure through the virial expression
+    // --------------------------------
+
     {
         let now = Instant::now();
         let systems: MolSystems = fs::read_to_string(m6_files.join("pres.xyz"))
@@ -227,19 +233,8 @@ fn main() {
         let trace = Scatter::new(times, pressure).name("LJ Pressure");
         plot.add_trace(trace);
         let layout = Layout::new()
-            .grid(
-                LayoutGrid::new()
-                    .rows(3)
-                    .columns(1)
-                    .pattern(GridPattern::Independent)
-                    .row_order(RowOrder::TopToBottom),
-            )
-            .height(2000)
-            .width(2500)
             .title(Title::new("LJ Pressure"))
-            .x_axis3(Axis::new().title(Title::new("Time")))
-            // .x_axis2(Axis::new().title(Title::new("Distance (Angstroms)")))
-            // .x_axis3(Axis::new().title(Title::new("Distance (Angstroms)")))
+            .x_axis(Axis::new().title(Title::new("Time")))
             .y_axis(Axis::new().title(Title::new("Pressure / Joules per cubic Angstrom")));
         plot.set_layout(layout);
         #[cfg(feature = "png")]
@@ -251,35 +246,22 @@ fn main() {
         let mut plot = Plot::new();
         let trace = Scatter::new(times, pressure).name("PHS Pressure");
         plot.add_trace(trace);
+
         let layout = Layout::new()
-            .grid(
-                LayoutGrid::new()
-                    .rows(3)
-                    .columns(1)
-                    .pattern(GridPattern::Independent)
-                    .row_order(RowOrder::TopToBottom),
-            )
-            .height(2000)
-            .width(2500)
             .title(Title::new("PHS Pressure"))
-            .x_axis3(Axis::new().title(Title::new("Time")))
-            // .x_axis2(Axis::new().title(Title::new("Distance (Angstroms)")))
-            // .x_axis3(Axis::new().title(Title::new("Distance (Angstroms)")))
+            .x_axis(Axis::new().title(Title::new("Time")))
             .y_axis(Axis::new().title(Title::new("Pressure / Joules per cubic Angstrom")));
         plot.set_layout(layout);
         #[cfg(feature = "png")]
         plot.write_image("m6_ex4_1_b.png", ImageFormat::PNG, 800, 600, 1.0);
         plot.write_html("m6_ex4_1_b.html");
 
-        // println!("LJ pressure (Joules per cubic angstrom): {:.2}", pressure);
-        // let energy = systems[0].total_energy(phs_potential);
-        // println!("Total energy (Joules): {:.2}", energy);
-        // let volume = systems[0].bb_volume();
-        // println!("Volume (cubic angstroms): {:.2}", volume);
-        // println!("PV (Joules): {:.2}", pressure * volume);
-        // println!("H (Joules): {:.2}", energy + pressure * volume);
         println!("Ex 4.1 took {} ms\n", now.elapsed().as_millis());
     }
+
+    // --------------------------------
+    // 4.2 Time evolution of enthalpy
+    // --------------------------------
 
     {
         let now = Instant::now();
@@ -293,19 +275,8 @@ fn main() {
         let trace = Scatter::new(times, pressure).name("LJ Enthalpy");
         plot.add_trace(trace);
         let layout = Layout::new()
-            .grid(
-                LayoutGrid::new()
-                    .rows(3)
-                    .columns(1)
-                    .pattern(GridPattern::Independent)
-                    .row_order(RowOrder::TopToBottom),
-            )
-            .height(2000)
-            .width(2500)
             .title(Title::new("LJ Enthalpy"))
-            .x_axis3(Axis::new().title(Title::new("Time")))
-            // .x_axis2(Axis::new().title(Title::new("Distance (Angstroms)")))
-            // .x_axis3(Axis::new().title(Title::new("Distance (Angstroms)")))
+            .x_axis(Axis::new().title(Title::new("Time")))
             .y_axis(Axis::new().title(Title::new("H / Joules")));
         plot.set_layout(layout);
         #[cfg(feature = "png")]
@@ -328,32 +299,29 @@ fn main() {
             .height(2000)
             .width(2500)
             .title(Title::new("PHS Enthalpy"))
-            .x_axis3(Axis::new().title(Title::new("Time")))
-            // .x_axis2(Axis::new().title(Title::new("Distance (Angstroms)")))
-            // .x_axis3(Axis::new().title(Title::new("Distance (Angstroms)")))
+            .x_axis(Axis::new().title(Title::new("Time")))
             .y_axis(Axis::new().title(Title::new("H / Joules")));
         plot.set_layout(layout);
         #[cfg(feature = "png")]
         plot.write_image("m6_ex4_2_b.png", ImageFormat::PNG, 800, 600, 1.0);
         plot.write_html("m6_ex4_2_b.html");
 
-        // println!("LJ pressure (Joules per cubic angstrom): {:.2}", pressure);
-        // let energy = systems[0].total_energy(phs_potential);
-        // println!("Total energy (Joules): {:.2}", energy);
-        // let volume = systems[0].bb_volume();
-        // println!("Volume (cubic angstroms): {:.2}", volume);
-        // println!("PV (Joules): {:.2}", pressure * volume);
-        // println!("H (Joules): {:.2}", energy + pressure * volume);
         println!("Ex 4.2 took {} ms\n", now.elapsed().as_millis());
     }
 
+    // --------------------------------
+    // 5 Dynamic properties: Diffusion coefficient
+    // --------------------------------
+
     {
         let now = Instant::now();
+        // for diffusion question: fp maths not callable from const context
+        let tau_diff: f64 = (6.63e-26 * sigma_diff.powi(2) / (0.24 * kcal_to_j)).sqrt() * 1e12; // femtoseconds
         let mut systems: MolSystems = fs::read_to_string(m6_files.join("diffusionA.xyz"))
             .expect("Unable to read the file")
             .parse()
             .unwrap();
-        // let n = systems.len();/
+
         let times = (0..systems.len()).map(|i| 2 * i).collect::<Vec<_>>();
         let msds = systems.diffusion();
         let tt = times.par_iter().map(|t| (t * t) as f64).sum::<f64>();
@@ -363,6 +331,7 @@ fn main() {
             .map(|(t, msd)| *t as f64 * msd)
             .sum::<f64>();
         println!("slope = {:.5}", mt / tt);
+        println!("D = {:.5}", (mt / sigma_diff) / (tt * 2. / tau_diff));
         let mut plot = Plot::new();
         let trace = Scatter::new(times, msds).name("Diffuson of A");
         let layout = Layout::new()
@@ -379,11 +348,13 @@ fn main() {
 
     {
         let now = Instant::now();
+        // for diffusion question: fp maths not callable from const context
+        let tau_diff: f64 = (6.63e-26 * sigma_diff.powi(2) / (0.24 * kcal_to_j)).sqrt() * 1e12; // femtoseconds
         let mut systems: MolSystems = fs::read_to_string(m6_files.join("diffusionB.xyz"))
             .expect("Unable to read the file")
             .parse()
             .unwrap();
-        // let n = systems.len();/
+
         let times = (0..systems.len()).map(|i| 2 * i).collect::<Vec<_>>();
         let msds = systems.diffusion();
         let tt = times.par_iter().map(|t| (t * t) as f64).sum::<f64>();
@@ -393,6 +364,7 @@ fn main() {
             .map(|(t, msd)| *t as f64 * msd)
             .sum::<f64>();
         println!("slope = {:.5}", mt / tt);
+        println!("D = {:.5}", (mt / sigma_diff) / (tt * 2. / tau_diff));
         let mut plot = Plot::new();
         let trace = Scatter::new(times, msds).name("Diffuson of B");
         let layout = Layout::new()
@@ -406,6 +378,10 @@ fn main() {
         plot.write_html("m6_ex5_b.html");
         println!("Ex 5b took {} ms\n", now.elapsed().as_millis());
     }
+
+    // --------------------------------
+    // 6.1 Number of contacts through a local order parameter
+    // --------------------------------
 
     {
         let now = Instant::now();
@@ -457,6 +433,10 @@ fn main() {
         println!("Ex 6.1 took {} ms\n", now.elapsed().as_millis());
     }
 
+    // --------------------------------
+    // 6.2 Computing the phase diagram
+    // --------------------------------
+
     {
         // The filters for the two means are based solely on graphs
         let mut p_t: Vec<(f64, f64)> = Vec::with_capacity(8);
@@ -468,16 +448,14 @@ fn main() {
         let (boxes, count) = t264k.z_dist(100, 3.4);
         let highs: Vec<f64> = count.iter().filter(|x| **x > 0.45).copied().collect();
         let lows: Vec<f64> = count.iter().filter(|x| **x < 0.05).copied().collect();
-        println!(
-            "Mean high density 266K: {}",
-            highs.iter().sum::<f64>() / highs.len() as f64
-        );
-        println!(
-            "Mean high density 266K: {}",
-            lows.iter().sum::<f64>() / lows.len() as f64
-        );
-        p_t.push((264., highs.iter().sum::<f64>() / highs.len() as f64));
-        p_t.push((264., lows.iter().sum::<f64>() / lows.len() as f64));
+
+        let high_avg = highs.iter().sum::<f64>() / highs.len() as f64;
+        let low_avg = lows.iter().sum::<f64>() / lows.len() as f64;
+        println!("Mean high density 266K: {}", high_avg);
+        println!("Mean low density 266K: {}", low_avg);
+        p_t.push((264., high_avg));
+        p_t.push((264., low_avg));
+
         let mut plot = Plot::new();
         let trace = Scatter::new(boxes, count).name("Dispersion at 264 K");
         let layout = Layout::new()
@@ -497,16 +475,14 @@ fn main() {
         let (boxes, count) = t276k.z_dist(100, 3.4);
         let highs: Vec<f64> = count.iter().filter(|x| **x > 0.45).copied().collect();
         let lows: Vec<f64> = count.iter().filter(|x| **x < 0.05).copied().collect();
-        println!(
-            "Mean high density 276K: {}",
-            highs.iter().sum::<f64>() / highs.len() as f64
-        );
-        println!(
-            "Mean high density 276K: {}",
-            lows.iter().sum::<f64>() / lows.len() as f64
-        );
-        p_t.push((276., highs.iter().sum::<f64>() / highs.len() as f64));
-        p_t.push((276., lows.iter().sum::<f64>() / lows.len() as f64));
+
+        let high_avg = highs.iter().sum::<f64>() / highs.len() as f64;
+        let low_avg = lows.iter().sum::<f64>() / lows.len() as f64;
+        println!("Mean high density 276K: {}", high_avg);
+        println!("Mean low density 276K: {}", low_avg);
+        p_t.push((276., high_avg));
+        p_t.push((276., low_avg));
+
         let mut plot = Plot::new();
         let trace = Scatter::new(boxes, count).name("Dispersion at 276 K");
         let layout = Layout::new()
@@ -524,18 +500,16 @@ fn main() {
             .parse()
             .unwrap();
         let (boxes, count) = t288k.z_dist(100, 3.4);
+
         let highs: Vec<f64> = count.iter().filter(|x| **x > 0.35).copied().collect();
         let lows: Vec<f64> = count.iter().filter(|x| **x < 0.05).copied().collect();
-        println!(
-            "Mean high density 288K: {}",
-            highs.iter().sum::<f64>() / highs.len() as f64
-        );
-        println!(
-            "Mean high density 288K: {}",
-            lows.iter().sum::<f64>() / lows.len() as f64
-        );
-        p_t.push((288., highs.iter().sum::<f64>() / highs.len() as f64));
-        p_t.push((288., lows.iter().sum::<f64>() / lows.len() as f64));
+        let high_avg = highs.iter().sum::<f64>() / highs.len() as f64;
+        let low_avg = lows.iter().sum::<f64>() / lows.len() as f64;
+        println!("Mean high density 288K: {}", high_avg);
+        println!("Mean low density 288K: {}", low_avg);
+        p_t.push((288., high_avg));
+        p_t.push((288., low_avg));
+
         let mut plot = Plot::new();
         let trace = Scatter::new(boxes, count).name("Dispersion at 288 K");
         let layout = Layout::new()
@@ -553,18 +527,17 @@ fn main() {
             .parse()
             .unwrap();
         let (boxes, count) = t300k.z_dist(100, 3.4);
+
         let highs: Vec<f64> = count.iter().filter(|x| **x > 0.215).copied().collect();
         let lows: Vec<f64> = count.iter().filter(|x| **x < 0.18).copied().collect();
-        println!(
-            "Mean high density 300K: {}",
-            highs.iter().sum::<f64>() / highs.len() as f64
-        );
-        println!(
-            "Mean high density 300K: {}",
-            lows.iter().sum::<f64>() / lows.len() as f64
-        );
-        p_t.push((300., highs.iter().sum::<f64>() / highs.len() as f64));
-        p_t.push((300., lows.iter().sum::<f64>() / lows.len() as f64));
+
+        let high_avg = highs.iter().sum::<f64>() / highs.len() as f64;
+        let low_avg = lows.iter().sum::<f64>() / lows.len() as f64;
+        println!("Mean high density 300K: {}", high_avg);
+        println!("Mean low density 300K: {}", low_avg);
+        p_t.push((300., high_avg));
+        p_t.push((300., low_avg));
+
         let mut plot = Plot::new();
         let trace = Scatter::new(boxes, count).name("Dispersion at 300 K");
         let layout = Layout::new()
@@ -600,9 +573,10 @@ fn main() {
         println!("Ex 6.2 took {} ms\n", now.elapsed().as_millis());
     }
 
-    println!("MD exercises too {} ms", now_global.elapsed().as_millis());
+    println!("MD exercises took {} ms", now_global.elapsed().as_millis());
 }
 
+// Potential energy functions
 fn lj_potential(system: &MolSystem, atom_1: &Atom, atom_2: &Atom) -> f64 {
     let r = system.distance(atom_1, atom_2);
     let sigma = 3.405;

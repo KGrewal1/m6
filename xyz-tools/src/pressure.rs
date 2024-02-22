@@ -1,6 +1,8 @@
 use crate::{Atom, MolSystem, MolSystems};
 use rayon::prelude::*;
 impl MolSystem {
+    /// Calculate the virial pressure of a system given the derivative of the
+    /// pairwise potential
     pub fn virial_pressure<F: Fn(&MolSystem, &Atom, &Atom) -> f64 + Sync>(
         &self,
         rdpotential: &F,
@@ -44,6 +46,8 @@ impl MolSystem {
 }
 
 impl MolSystems {
+    /// Calculate the virial pressure of all systems given the derivative of the
+    /// pairwise potential: see [`MolSystem::virial_pressure`]
     pub fn virial_pressure<F: Fn(&MolSystem, &Atom, &Atom) -> f64 + Sync + Send>(
         &self,
         rdpotential: F,
@@ -56,6 +60,8 @@ impl MolSystems {
         )
     }
 
+    /// Calculate the enthalpy of all systems given the pairwise potential and the derivative of the
+    /// pairwise potential: see [`MolSystem::virial_pressure`] and [`MolSystem::total_energy_int`]
     pub fn enthalpy<
         F: Fn(&MolSystem, &Atom, &Atom) -> f64 + Sync + Send,
         G: Fn(&MolSystem, &Atom, &Atom) -> f64 + Sync + Send,

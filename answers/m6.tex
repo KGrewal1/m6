@@ -268,4 +268,62 @@ b
 	\intertext{Using the orthogonality of sinusoidal functions of different frequencies, this integral is 0 in the limit}
 	&=\frac{a_{1}^{2}}{2}\cos(\omega_{1} \tau)+\frac{a_{2}^{2}}{2}\cos(\omega_{2} \tau)\\
 \end{flalign*}
+\question{2}
+RDF code isn't checked but plots seem `reasonable'
+
+For 3 set1 liquid, set2 fcc, set3 bcc crystals? (as bcc has closer second nearest neighbours?)
+
+\question{3}
+
+Code for energies checked against LJ clusters from CCD
+
+Velocities and KE of random distributions seem correct but should calculate MB distribution standard deviation for KE.
+
+\question{4}
+Use transform for $f\cdot r$ for pairwise additive forces as follows:
+\begin{flalign*}
+	\sum_{i}\bm{r}\cdot\bm{f}&=\sum_{i}\bm{r}_{i}\cdot\sum_{j}\bm{f}_{ij}\\
+	\intertext{Where $f_{ij}$ is the force on $i$ due to $j$: through newton $f_{ij}=-f_{ji}$. As such summing over all unique $ij$ pairs}
+	&=\sum_{ij}(\bm{r}_{i}-\bm{r}_{j})\bm{f}_{ij}\\
+	\intertext{And as the forces are between the points, these two vectors are parallel and thus}
+		&=\sum_{ij}|\bm{r}_{i}-\bm{r}_{j}||\bm{f}_{ij}|\\
+		\intertext{And so we need to sum $r\frac{dU(r)}{dr}$ over every pairwise distance}
+\end{flalign*}
+There is I think a unit conversion issue I have made, and it is not clear if the LAMMPS dump has the velocities scaled to the box size
+\question{5}
+Diffusivity not tested but plots appear sensible: check units
+\question{6}
+Mean contact number correct though code overly specialised (could have instead been treated as an odd form of potential). PT curve gives phase transition at about \SI{310}{\kelvin}, though the bimodal means for each temperature were done overly manually.
+
+\section{Monte Carlo questions}
+Some typos appear to change the meaning of the question? Appears to use same counter for number of photons and number of accessible energy states?
+\question{1.1}
+\begin{flalign*}
+	\intertext{Combining all possible energies as sum of partition states of each photon (using product as $\exp(a+b) = \exp(a)\exp(b)$)}
+ Q&=\prod_{1}^{N}\left[\sum_{0}^{\infty}\exp(-\beta \epsilon_{j})\right]\\
+ \intertext{Using identity given:}
+ &=\prod_{1}^{N}\frac{1}{1-\exp(-\beta \epsilon_{j})}\\
+\end{flalign*}
+The expected occupancy number of state $j$ is the probability of being in state $j$ for each photon (times the number of photons)
+\begin{flalign*}
+	\braket{n_{j}}&=\frac{\exp(-\beta \epsilon_{j})}{\sum_{0}^{\infty}\exp(-\beta\epsilon_{j})}\\
+	&=\frac{\exp(-\beta \epsilon_{j})}{1-\exp(-\beta \epsilon_{j})}\\
+	&=\frac{1}{\exp(\beta \epsilon_{j})-1}\\
+	\frac{\partial \ln Q}{\partial (-\beta \epsilon_{j})}&=\sum_{1}^{N}\frac{\partial}{\partial (-\beta \epsilon_{j})}\ln\frac{1}{1-\exp(-\beta \epsilon_{j})}\\
+	&=\sum_{1}^{N}\frac{\exp(-\beta \epsilon_{j})}{1-\exp(-\beta \epsilon_{j})}\\
+	&=N\frac{\exp(-\beta \epsilon_{j})}{1-\exp(-\beta \epsilon_{j})}
+\end{flalign*}
+At infinite $T$ the expected occupancy number diverges as the denominator goes to 0, whilst at $T=0$, $\braket{n_{j}}=0$
+
+Detailed balance is preserved when $n_{j}=0$, by preventing moves to negative energies by a transition back to the $0$ state. This sampling method would also work in terms of detailed balance for the other two step schemes described though if the step must be $\pm3$ phase space then cannot be fully sampled by the simulation and so even though detailed balance will hold, it may not be accurate.
+
+Not updating the average when trial moves are not accepted is obviously incorrect for the reason that we should expect regions of phase space that are low in energy to be occupied more often, and by only updating when we transition, these regions of phase space contribute significantly less than they should, especially when they are lower than any region easily accessible from them (ie most transitions are rejected but by only updating when a transition is accepted, the code does not reflect this).
+
+\question{3}
+\begin{flalign*}
+	\begin{pmatrix}5a&9a&6b&7b\end{pmatrix}\begin{pmatrix}0.1&0.9&0&0\\0.5&0.5&0&0\\0&0&0.3&0.7\\0&0&0.6&0.4\end{pmatrix}&=\begin{pmatrix}5a&9a&6b&7b\end{pmatrix}
+\end{flalign*}
+The system however is formed of two uncoupled systems (1,2) and (3,4) with no possibility of transition between them so it is impossible to determine the relative values of $a$ and $b$, and all of phase space cannot be accessed from a given starting position.
+
+The equilibrium probability distribution for a system with transition matrix $P$ with detailed balance has the property $\pi P=\pi$ (as detailed balance implies stationarity) and as such the supermarkov sequence $P^{N}$ will have the same property as $\pi P^{N} = \pi P^{N-1}$ and so forth
 \end{document}

@@ -3,6 +3,7 @@ use rayon::prelude::*;
 use std::{f64::consts::PI, vec};
 
 impl MolSystem {
+    /// radial distribuion function of a single system
     #[must_use]
     pub fn rdf(
         &self,
@@ -129,7 +130,7 @@ impl MolSystem {
 
 impl MolSystems {
     /// avergaes the RDF across systems
-    /// makes aasssumption that they're all the same system at different times
+    /// makes asssumption that they're all the same system at different times
     #[must_use]
     pub fn rdf(
         &self,

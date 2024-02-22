@@ -54,6 +54,7 @@ impl MolSystem {
         (self.x1 - self.x0) * (self.y1 - self.y0) * (self.z1 - self.z0)
     }
 
+    /// return the distance between two atoms in the system
     #[must_use]
     pub fn distance(&self, atom_a: &Atom, atom_b: &Atom) -> f64 {
         self.square_distance(atom_a, atom_b).sqrt()
@@ -61,11 +62,10 @@ impl MolSystem {
 
     #[must_use]
     fn square_distance(&self, atom_a: &Atom, atom_b: &Atom) -> f64 {
-        // TODO: Adjust by scale factor
         let dx = (atom_a.x - atom_b.x).abs();
         let dy = (atom_a.y - atom_b.y).abs();
         let dz = (atom_a.z - atom_b.z).abs();
-        // println!("dx: {}, dy: {}, dz: {}", dx, dy, dz);
+
         if self.scaling == Scaling::Scaled {
             let dist_x = self.x1 - self.x0;
             let dist_y = self.y1 - self.y0;

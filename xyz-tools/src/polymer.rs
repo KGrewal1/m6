@@ -7,6 +7,7 @@ impl MolSystem {
         self.atoms.par_iter().map(|atom| atom.mol).max().unwrap() as usize
     }
 
+    /// get the mean number of contacts for atoms in the system, excluding bonded atoms
     pub fn mean_contact(&self, cutoff: f64) -> f64 {
         self.atoms
             .par_iter()
@@ -24,6 +25,7 @@ impl MolSystem {
             / (self.n_molecules() as f64)
     }
 
+    /// get the z axis distribution of the system
     pub fn z_dist(&self, resolution: usize, lunit: f64) -> (Vec<f64>, Vec<f64>) {
         let boxes = (0..resolution).map(|i| i as f64).collect();
         let dr = 1.0 / ((resolution - 1) as f64);
@@ -65,6 +67,7 @@ impl MolSystem {
 }
 
 impl MolSystems {
+    /// get the mean contact number for all atoms in the systems (see [`MolSystem::mean_contact`] for more details)
     pub fn mean_contact(&self, cutoff: f64) -> f64 {
         self.0
             .par_iter()
@@ -73,6 +76,7 @@ impl MolSystems {
             / (self.0.len() as f64)
     }
 
+    /// get the z axis distribution for all systems (see [`MolSystem::z_dist`] for more details)
     pub fn z_dist(&self, resolution: usize, lunit: f64) -> (Vec<f64>, Vec<f64>) {
         let boxes = (0..resolution).map(|i| i as f64).collect();
         let dr = 1.0 / ((resolution) as f64);

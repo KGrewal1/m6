@@ -29,7 +29,7 @@ imprecise_flops = "warn"
 module_name_repetitions = {level =  "allow", priority = 1}
 uninlined_format_args = {level =  "allow", priority = 1}
 missing_errors_doc = {level =  "allow", priority = 1}
-
+non_upper_case_globals = {level =  "allow", priority = 1}
 
 [profile.release]
 debug = true

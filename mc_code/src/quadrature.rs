@@ -19,8 +19,9 @@ pub fn uniform_sample<F: Fn(f64) -> f64 + Sync>(
     range_top: f64,
     n_samples: usize,
     function: F,
+    seed: u64,
 ) -> f64 {
-    let mut rng = Xoshiro256StarStar::seed_from_u64(42);
+    let mut rng = Xoshiro256StarStar::seed_from_u64(seed);
     let sum = (0..n_samples)
         .map(|_| {
             let x = rng.gen_range(range_bottom..range_top);
@@ -33,22 +34,20 @@ pub fn uniform_sample<F: Fn(f64) -> f64 + Sync>(
 pub fn importance_sample<F: Fn(f64) -> f64 + Sync, G: Fn(f64) -> f64 + Sync>(
     range_bottom: f64,
     range_top: f64,
-    n_samples: usize,
+    mut n_samples: usize,
     function: F,
     weight_function: G,
+    seed: u64,
 ) -> f64 {
-    let mut rng = Xoshiro256StarStar::seed_from_u64(42);
-    let mut sample_points = Vec::with_capacity(n_samples);
-    while sample_points.len() != n_samples {
+    let mut rng = Xoshiro256StarStar::seed_from_u64(seed);
+    let mut sample_vals = Vec::with_capacity(n_samples);
+    while sample_vals.len() != n_samples {
         let x = rng.gen_range(range_bottom..range_top);
         let y = rng.gen_range(0.0..1.0);
-        if y < weight_function(x) {
-            sample_points.push(x);
+        let wf = weight_function(x);
+        if y < wf {
+            sample_vals.push(function(x) / weight_function(x));
         }
     }
-    sample_points
-        .par_iter()
-        .map(|x| function(*x) / weight_function(*x))
-        .sum::<f64>()
-        / (n_samples as f64)
+    sample_vals.par_iter().sum::<f64>() / (n_samples as f64)
 }

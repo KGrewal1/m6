@@ -1,6 +1,7 @@
 use std::{collections::VecDeque, time::Instant};
 
 use quadrature::trapezoidal;
+use rayon::iter::{IntoParallelRefIterator, ParallelBridge, ParallelIterator};
 
 use crate::quadrature::{importance_sample, uniform_sample};
 
@@ -17,27 +18,110 @@ fn main() {
         println!("MC Ex 1 took {} ms\n", now.elapsed().as_millis());
     }
 
+    //-----------------
+    // MC q 2
+    //----------------
     {
         let now = Instant::now();
         println!("Exact integral 1.0");
 
-        let range: VecDeque<f64> = (0..1_000_000).map(|i| 1e-6 * i as f64).collect();
+        {
+            let now = Instant::now();
+            let range: VecDeque<f64> = (0..1_000_000).map(|i| 1e-6 * i as f64).collect();
 
-        let integral = trapezoidal(range, three_x_sq);
+            let integral = trapezoidal(range, three_x_sq);
 
-        println!("Trapezoidal integral: {}", integral);
+            println!("Trapezoidal integral: {}", integral);
+            println!("Trapezoidal took {} ms\n", now.elapsed().as_millis());
+        }
 
-        let integral = uniform_sample(0., 1., 1_000_000, three_x_sq);
+        {
+            let now = Instant::now();
+            let integrals: Vec<f64> = (1..=1000)
+                .par_bridge()
+                .map(|i| uniform_sample(0., 1., 1_000_000, three_x_sq, i))
+                .collect();
 
-        println!("Uniform Sampling integral: {}", integral);
+            let expected_integral = integrals.par_iter().sum::<f64>() / 1000.;
 
-        let integral = importance_sample(0., 1., 1_000_000, three_x_sq, two_x);
+            let variance = integrals
+                .par_iter()
+                .map(|x| (x - expected_integral).powi(2))
+                .sum::<f64>()
+                / 1000.;
 
-        println!("2x Sampling integral: {}", integral);
+            println!(
+                "Uniform Sampling integral: {}, variance {}",
+                expected_integral, variance
+            );
+            println!("Uniform took {} ms\n", now.elapsed().as_millis());
+        }
 
-        let integral = importance_sample(0., 1., 1_000_000, three_x_sq, four_x_cubed);
+        {
+            let now = Instant::now();
+            let integrals: Vec<f64> = (1..=1000)
+                .par_bridge()
+                .map(|i| importance_sample(0., 1., 1_000_000, three_x_sq, two_x, i))
+                .collect();
 
-        println!("4x^3 Sampling integral: {}", integral);
+            let expected_integral = integrals.par_iter().sum::<f64>() / 1000.;
+
+            let variance = integrals
+                .par_iter()
+                .map(|x| (x - expected_integral).powi(2))
+                .sum::<f64>()
+                / 1000.;
+
+            println!(
+                "2x Sampling integral: {}, variance {}",
+                expected_integral, variance
+            );
+            println!("2x took {} ms\n", now.elapsed().as_millis());
+        }
+
+        {
+            let now = Instant::now();
+            let integrals: Vec<f64> = (1..=1000)
+                .par_bridge()
+                .map(|i| importance_sample(0., 1., 1_000_000, three_x_sq, four_x_cubed, i))
+                .collect();
+
+            let expected_integral = integrals.par_iter().sum::<f64>() / 1000.;
+
+            let variance = integrals
+                .par_iter()
+                .map(|x| (x - expected_integral).powi(2))
+                .sum::<f64>()
+                / 1000.;
+
+            println!(
+                "4x^3 Sampling integral: {}, variance {}",
+                expected_integral, variance
+            );
+            println!("4x^3 took {} ms\n", now.elapsed().as_millis());
+        }
+
+        {
+            let now = Instant::now();
+            let integrals: Vec<f64> = (1..=1000)
+                .par_bridge()
+                .map(|i| importance_sample(0., 1., 1_000_000, three_x_sq, three_x_sq, i))
+                .collect();
+
+            let expected_integral = integrals.par_iter().sum::<f64>() / 1000.;
+
+            let variance = integrals
+                .par_iter()
+                .map(|x| (x - expected_integral).powi(2))
+                .sum::<f64>()
+                / 1000.;
+
+            println!(
+                "3x^2 Sampling integral: {}, variance {}",
+                expected_integral, variance
+            );
+            println!("3x^2 took {} ms\n", now.elapsed().as_millis());
+        }
 
         println!("MC Ex 2 took {} ms\n", now.elapsed().as_millis());
     }

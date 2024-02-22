@@ -1,3 +1,4 @@
+//! tools to calculate virial pressure
 use crate::{Atom, MolSystem, MolSystems};
 use rayon::prelude::*;
 impl MolSystem {

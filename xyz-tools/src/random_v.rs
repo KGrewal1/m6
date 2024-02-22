@@ -1,3 +1,4 @@
+//! tools to work with velocity
 use crate::MolSystem;
 use rand::prelude::*;
 use rand_xoshiro::Xoshiro256StarStar;

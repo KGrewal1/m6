@@ -1,3 +1,5 @@
+//! tools to calculate the potential energy of a system
+
 use crate::{Atom, MolSystem};
 use rayon::prelude::*;
 impl MolSystem {

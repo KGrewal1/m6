@@ -1,3 +1,4 @@
+//! tools to calculate the radial distribution function
 use crate::{Atom, MolSystem, MolSystems, Periodicity, Scaling};
 use rayon::prelude::*;
 use std::{f64::consts::PI, vec};

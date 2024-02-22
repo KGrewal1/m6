@@ -1,3 +1,4 @@
+//! This contains tools to parse and analyse molecular systems described in LAMMPS dump files
 mod deserializer;
 pub mod diffusion;
 pub mod polymer;
@@ -6,18 +7,21 @@ pub mod pressure;
 pub mod radial_distribution;
 pub mod random_v;
 
+/// The periodicity of the system
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Periodicity {
     Periodic,
     NonPeriodic,
 }
 
+/// The scaling of the system
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Scaling {
     Scaled,
     Unscaled,
 }
 
+/// An atom in a molecular system
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Atom {
     pub id: u32,
@@ -32,6 +36,7 @@ pub struct Atom {
     pub vz: f64,
 }
 
+/// A molecular system read in from a LAMMPS dump file
 #[derive(Debug, Clone, PartialEq)]
 pub struct MolSystem {
     pub time: u32,
@@ -108,6 +113,8 @@ impl MolSystem {
         });
     }
 }
+
+/// A vector of molecular systems from a LAMMPS dump file
 pub struct MolSystems(Vec<MolSystem>);
 
 impl std::ops::Deref for MolSystems {

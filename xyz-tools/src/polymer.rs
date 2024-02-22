@@ -1,3 +1,4 @@
+//! tools to analyser the polymer systems
 use crate::{Atom, MolSystem, MolSystems, Periodicity, Scaling};
 use rayon::prelude::*;
 

@@ -290,15 +290,6 @@ fn main() {
         let trace = Scatter::new(times, pressure).name("PHS Enthalpy");
         plot.add_trace(trace);
         let layout = Layout::new()
-            .grid(
-                LayoutGrid::new()
-                    .rows(3)
-                    .columns(1)
-                    .pattern(GridPattern::Independent)
-                    .row_order(RowOrder::TopToBottom),
-            )
-            .height(2000)
-            .width(2500)
             .title(Title::new("PHS Enthalpy"))
             .x_axis(Axis::new().title(Title::new("Time")))
             .y_axis(Axis::new().title(Title::new("H / Joules")));
@@ -366,6 +357,7 @@ fn main() {
             .sum::<f64>();
         println!("slope = {:.5}", mt / tt);
         println!("D = {:.5}", (mt / sigma_diff) / (tt * 2. / tau_diff));
+        println!("This however may not be the most valid straight line fit");
         let mut plot = Plot::new();
         let trace = Scatter::new(times, msds).name("Diffuson of B");
         let layout = Layout::new()

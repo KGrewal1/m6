@@ -65,7 +65,7 @@ fn mc_calc<const NSTEPS: usize>(beta: f64) -> f64 {
         let new_state = if direction {
             state.saturating_add(1)
         } else {
-            state.saturating_sub(1) // saturating sub dprevents occupancy below
+            state.saturating_sub(1) // saturating sub prevents overflow (unsigned cannot be negative)
         };
         let u_init = e_j * f64::from(state);
         let u_final = e_j * f64::from(new_state);

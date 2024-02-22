@@ -8,6 +8,7 @@ use crate::quadrature::{importance_sample, importance_sample_alt, uniform_sample
 mod photon_gas;
 mod quadrature;
 
+#[allow(clippy::too_many_lines)]
 fn main() {
     let plots_dir = Path::new("plots");
     if !plots_dir.exists() {

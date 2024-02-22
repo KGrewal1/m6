@@ -37,7 +37,7 @@ pub fn importance_sample<F: Fn(f64) -> f64 + Sync, G: Fn(f64) -> f64 + Sync>(
     range_top: f64,
     n_samples: usize,
     function: F,
-    weight_function: G,
+    pdf: G,
     seed: u64,
 ) -> f64 {
     let mut rng = Xoshiro256StarStar::seed_from_u64(seed);
@@ -45,11 +45,36 @@ pub fn importance_sample<F: Fn(f64) -> f64 + Sync, G: Fn(f64) -> f64 + Sync>(
     while sample_vals.len() != n_samples {
         let x = rng.gen_range(range_bottom..range_top);
         let y = rng.gen_range(0.0..1.0);
-        let wf = weight_function(x);
+        let wf = pdf(x);
         if y < wf {
-            sample_vals.push(function(x) / weight_function(x));
+            sample_vals.push(function(x) / pdf(x));
         }
     }
 
     sample_vals.par_iter().sum::<f64>() / (n_samples as f64)
+}
+
+pub fn importance_sample_alt<
+    F: Fn(f64) -> f64 + Sync,
+    G: Fn(f64) -> f64 + Sync,
+    H: Fn(f64) -> f64 + Sync,
+>(
+    range_bottom: f64,
+    range_top: f64,
+    n_samples: usize,
+    function: F,
+    pdf: G,
+    inverse_cdf: H,
+    seed: u64,
+) -> f64 {
+    let mut rng = Xoshiro256StarStar::seed_from_u64(seed);
+    let sum = (0..n_samples)
+        .map(|_| {
+            let x = rng.gen_range(range_bottom..range_top);
+            let x = inverse_cdf(x);
+            function(x) / pdf(x)
+        })
+        .sum::<f64>();
+
+    sum / (n_samples as f64)
 }

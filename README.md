@@ -40,4 +40,4 @@ This can be run using the following
 cargo r -r --bin md-code
 ```
 
-however this is currently just a hello world shell
+the importance sampling monte carlo for $2x$ and $4x^3$ don't seem converrgent and the Monte Carlo method is relatively slow due to lack of parallelism: the state of the PRNG changes every step making it difficult to parallelise easily.

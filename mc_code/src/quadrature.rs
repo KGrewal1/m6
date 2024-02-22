@@ -47,7 +47,7 @@ pub fn importance_sample<F: Fn(f64) -> f64 + Sync, G: Fn(f64) -> f64 + Sync>(
         let y = rng.gen_range(0.0..1.0);
         let wf = pdf(x);
         if y < wf {
-            sample_vals.push(function(x) / pdf(x));
+            sample_vals.push(function(x) / wf);
         }
     }
 

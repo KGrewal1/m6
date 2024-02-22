@@ -14,7 +14,7 @@ plotly = { version = "0.8.4" }
 rand = "0.8.5"
 rand_distr = "0.4.3"
 rand_xoshiro = "0.6.0"
-winnow = "0.5.36"
+winnow = "0.6.2"
 rayon = "1.8.1"
 assert_approx_eq = "1.1.0"
 
@@ -34,3 +34,4 @@ non_upper_case_globals = {level =  "allow", priority = 1}
 [profile.release]
 debug = true
 lto = true
+codegen-units = 1

@@ -5,3 +5,5 @@ answers/*
 !answers/m6.pdf
 !answers/m6.tex
 M6_files/*
+perf*
+*.svg

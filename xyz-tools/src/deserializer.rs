@@ -81,10 +81,12 @@ fn float_parser(s: &mut &str) -> PResult<f64> {
 }
 
 fn parse_id_mol_type(input: &mut &str) -> PResult<(u32, u32, u8)> {
+    let start = input.checkpoint();
     // space0.parse_next(input)?;
     let id: u32 = digit1.parse_to().parse_next(input).map_err(|err| {
         err.add_context(
             input,
+            &start,
             StrContext::Expected(winnow::error::StrContextValue::Description("Valid Atom Id")),
         )
     })?;
@@ -94,6 +96,7 @@ fn parse_id_mol_type(input: &mut &str) -> PResult<(u32, u32, u8)> {
     let mol: u32 = digit1.parse_to().parse_next(input).map_err(|err| {
         err.add_context(
             input,
+            &start,
             StrContext::Expected(winnow::error::StrContextValue::Description("Valid Mol ID")),
         )
     })?;
@@ -101,6 +104,7 @@ fn parse_id_mol_type(input: &mut &str) -> PResult<(u32, u32, u8)> {
     let at_type: u8 = digit1.parse_to().parse_next(input).map_err(|err| {
         err.add_context(
             input,
+            &start,
             StrContext::Expected(winnow::error::StrContextValue::Description(
                 "Valid Atom Type",
             )),
@@ -110,9 +114,11 @@ fn parse_id_mol_type(input: &mut &str) -> PResult<(u32, u32, u8)> {
 }
 
 fn parse_xyz(input: &mut &str) -> PResult<(f64, f64, f64)> {
+    let start = input.checkpoint();
     let x = float_parser(&mut take_until(0.., " ").parse_next(input)?).map_err(|err| {
         err.add_context(
             input,
+            &start,
             StrContext::Expected(winnow::error::StrContextValue::Description("Valid x pos")),
         )
     })?;
@@ -121,6 +127,7 @@ fn parse_xyz(input: &mut &str) -> PResult<(f64, f64, f64)> {
     let y = float_parser(&mut take_until(0.., " ").parse_next(input)?).map_err(|err| {
         err.add_context(
             input,
+            &start,
             StrContext::Expected(winnow::error::StrContextValue::Description("Valid y pos")),
         )
     })?;
@@ -129,6 +136,7 @@ fn parse_xyz(input: &mut &str) -> PResult<(f64, f64, f64)> {
     let z = float_parser(&mut till_line_ending.parse_next(input)?).map_err(|err| {
         err.add_context(
             input,
+            &start,
             StrContext::Expected(winnow::error::StrContextValue::Description("Valid z pos")),
         )
     })?;
@@ -137,9 +145,11 @@ fn parse_xyz(input: &mut &str) -> PResult<(f64, f64, f64)> {
 }
 
 fn parse_pos_vs(input: &mut &str) -> PResult<(f64, f64, f64, f64, f64, f64)> {
+    let start = input.checkpoint();
     let x = float_parser(&mut take_until(0.., " ").parse_next(input)?).map_err(|err| {
         err.add_context(
             input,
+            &start,
             StrContext::Expected(winnow::error::StrContextValue::Description("Valid x pos")),
         )
     })?;
@@ -148,6 +158,7 @@ fn parse_pos_vs(input: &mut &str) -> PResult<(f64, f64, f64, f64, f64, f64)> {
     let y = float_parser(&mut take_until(0.., " ").parse_next(input)?).map_err(|err| {
         err.add_context(
             input,
+            &start,
             StrContext::Expected(winnow::error::StrContextValue::Description("Valid y pos")),
         )
     })?;
@@ -156,6 +167,7 @@ fn parse_pos_vs(input: &mut &str) -> PResult<(f64, f64, f64, f64, f64, f64)> {
     let z = float_parser(&mut take_until(0.., " ").parse_next(input)?).map_err(|err| {
         err.add_context(
             input,
+            &start,
             StrContext::Expected(winnow::error::StrContextValue::Description("Valid z pos")),
         )
     })?;
@@ -164,6 +176,7 @@ fn parse_pos_vs(input: &mut &str) -> PResult<(f64, f64, f64, f64, f64, f64)> {
     let vx = float_parser(&mut take_until(0.., " ").parse_next(input)?).map_err(|err| {
         err.add_context(
             input,
+            &start,
             StrContext::Expected(winnow::error::StrContextValue::Description("Valid x vel")),
         )
     })?;
@@ -172,6 +185,7 @@ fn parse_pos_vs(input: &mut &str) -> PResult<(f64, f64, f64, f64, f64, f64)> {
     let vy = float_parser(&mut take_until(0.., " ").parse_next(input)?).map_err(|err| {
         err.add_context(
             input,
+            &start,
             StrContext::Expected(winnow::error::StrContextValue::Description("Valid y vel")),
         )
     })?;
@@ -180,6 +194,7 @@ fn parse_pos_vs(input: &mut &str) -> PResult<(f64, f64, f64, f64, f64, f64)> {
     let vz = float_parser(&mut till_line_ending.parse_next(input)?).map_err(|err| {
         err.add_context(
             input,
+            &start,
             StrContext::Expected(winnow::error::StrContextValue::Description("Valid z vel")),
         )
     })?;
@@ -188,6 +203,7 @@ fn parse_pos_vs(input: &mut &str) -> PResult<(f64, f64, f64, f64, f64, f64)> {
 }
 
 fn parse_atom(input: &mut &str) -> PResult<Atom> {
+    let start = input.checkpoint();
     multispace0.parse_next(input)?;
 
     // space0.parse_next(input)?;
@@ -198,6 +214,7 @@ fn parse_atom(input: &mut &str) -> PResult<Atom> {
         float_parser(&mut take_until(0.., " ").parse_next(input)?).map_err(|err| {
             err.add_context(
                 input,
+                &start,
                 StrContext::Expected(winnow::error::StrContextValue::Description("Valid Charge")),
             )
         })?;
@@ -245,6 +262,7 @@ fn parse_atom_uncharged(input: &mut &str) -> PResult<Atom> {
 }
 
 fn parse_atom_vel(input: &mut &str) -> PResult<Atom> {
+    let start = input.checkpoint();
     multispace0.parse_next(input)?;
 
     // space0.parse_next(input)?;
@@ -255,6 +273,7 @@ fn parse_atom_vel(input: &mut &str) -> PResult<Atom> {
         float_parser(&mut take_until(0.., " ").parse_next(input)?).map_err(|err| {
             err.add_context(
                 input,
+                &start,
                 StrContext::Expected(winnow::error::StrContextValue::Description("Valid Charge")),
             )
         })?;

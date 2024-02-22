@@ -10,7 +10,6 @@ serde = {workspace = true}
 xyz-tools = {workspace = true}
 rayon = { workspace = true }
 plotly = {workspace = true}
-plotters = "0.3.3"
 
 [lints]
 workspace = true

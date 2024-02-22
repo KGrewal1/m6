@@ -29,6 +29,13 @@ imprecise_flops = "warn"
 module_name_repetitions = {level =  "allow", priority = 1}
 uninlined_format_args = {level =  "allow", priority = 1}
 missing_errors_doc = {level =  "allow", priority = 1}
+missing_panics_doc = {level =  "allow", priority = 1}
+# eant these to not warn as spend a lot of instance converting between f64 and usize
+cast_precision_loss = {level =  "allow", priority = 1}
+cast_possible_truncation = {level =  "allow", priority = 1}
+cast_sign_loss = {level =  "allow", priority = 1}
+
+[workspace.lints.rust]
 non_upper_case_globals = {level =  "allow", priority = 1}
 
 [profile.release]

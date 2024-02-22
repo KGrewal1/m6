@@ -27,7 +27,7 @@ fn main() {
 
         {
             let now = Instant::now();
-            let range: VecDeque<f64> = (0..1_000_000).map(|i| 1e-6 * i as f64).collect();
+            let range: VecDeque<f64> = (0..1_000_000).map(|i| 1e-6 * f64::from(i)).collect();
 
             let integral = trapezoidal(range, three_x_sq);
 

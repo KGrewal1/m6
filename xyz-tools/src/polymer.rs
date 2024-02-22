@@ -9,6 +9,7 @@ impl MolSystem {
     }
 
     /// get the mean number of contacts for atoms in the system, excluding bonded atoms
+    #[must_use]
     pub fn mean_contact(&self, cutoff: f64) -> f64 {
         self.atoms
             .par_iter()
@@ -27,6 +28,7 @@ impl MolSystem {
     }
 
     /// get the z axis distribution of the system
+    #[must_use]
     pub fn z_dist(&self, resolution: usize, lunit: f64) -> (Vec<f64>, Vec<f64>) {
         let boxes = (0..resolution).map(|i| i as f64).collect();
         let dr = 1.0 / ((resolution - 1) as f64);
@@ -59,16 +61,13 @@ impl MolSystem {
             },
         );
 
-        // #[allow(clippy::cast_precision_loss)]
-        // g_r.iter_mut()
-        //     .zip(volumes.iter())
-        //     .for_each(|(g, v)| *g /= (self.n_atoms.pow(2)) as f64 * v / self.bb_volume());
         g_r.into_iter().map(|n_atoms| n_atoms / volume).collect()
     }
 }
 
 impl MolSystems {
     /// get the mean contact number for all atoms in the systems (see [`MolSystem::mean_contact`] for more details)
+    #[must_use]
     pub fn mean_contact(&self, cutoff: f64) -> f64 {
         self.0
             .par_iter()
@@ -78,6 +77,7 @@ impl MolSystems {
     }
 
     /// get the z axis distribution for all systems (see [`MolSystem::z_dist`] for more details)
+    #[must_use]
     pub fn z_dist(&self, resolution: usize, lunit: f64) -> (Vec<f64>, Vec<f64>) {
         let boxes = (0..resolution).map(|i| i as f64).collect();
         let dr = 1.0 / ((resolution) as f64);

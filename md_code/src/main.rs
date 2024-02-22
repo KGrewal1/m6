@@ -10,7 +10,7 @@ use rayon::prelude::*;
 use std::{fs, path::Path, time::Instant};
 use xyz_tools::{Atom, MolSystem, MolSystems};
 
-const k_b: f64 = 1.380649; // Joules per kelvin
+const k_b: f64 = 1.380_649; // Joules per kelvin
 
 // conversion factor from kcal to joules
 const kcal_to_j: f64 = 4184.;
@@ -18,6 +18,7 @@ const kcal_to_j: f64 = 4184.;
 // for diffusion question
 const sigma_diff: f64 = 3.405; // Angstroms
 
+#[allow(clippy::too_many_lines)]
 fn main() {
     let m6_dir = Path::new("M6_files");
     let m6_files = m6_dir.join("enviar");
@@ -555,10 +556,10 @@ fn main() {
         // println!("{:?}", p_t);
         let mut pressures: Vec<f64> = Vec::with_capacity(8);
         let mut temperatures: Vec<f64> = Vec::with_capacity(8);
-        p_t.into_iter().for_each(|(t, p)| {
+        for (t, p) in p_t {
             temperatures.push(t);
             pressures.push(p);
-        });
+        }
         let mut plot = Plot::new();
         let trace = Scatter::new(pressures, temperatures).name("PT");
         let layout = Layout::new()

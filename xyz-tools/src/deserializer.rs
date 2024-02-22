@@ -332,16 +332,14 @@ fn parse_atom_list(input: &mut &str, n: usize, charge: bool, velocity: bool) -> 
                 .context(winnow::error::StrContext::Label("Parsing atom"))
                 .parse_next(input)
         }
+    } else if velocity {
+        repeat(n..=n, parse_atom_unchaged_vel)
+            .context(winnow::error::StrContext::Label("Parsing atom"))
+            .parse_next(input)
     } else {
-        if velocity {
-            repeat(n..=n, parse_atom_unchaged_vel)
-                .context(winnow::error::StrContext::Label("Parsing atom"))
-                .parse_next(input)
-        } else {
-            repeat(n..=n, parse_atom_uncharged)
-                .context(winnow::error::StrContext::Label("Parsing atom"))
-                .parse_next(input)
-        }
+        repeat(n..=n, parse_atom_uncharged)
+            .context(winnow::error::StrContext::Label("Parsing atom"))
+            .parse_next(input)
     }
 }
 
@@ -814,21 +812,21 @@ ITEM: TIMESTEP
         assert_eq!(res.time, 0);
         assert_eq!(res.n_atoms, 2);
         assert_eq!(res.periodicity, Periodicity::Periodic);
-        assert_eq!(res.x0, 7.3598534393802213e+00);
-        assert_eq!(res.x1, 4.4401174149901216e+01);
-        assert_eq!(res.y0, 7.3598534393802213e+00);
-        assert_eq!(res.y1, 4.4401174149901216e+01);
-        assert_eq!(res.z0, 7.3598534393802213e+00);
-        assert_eq!(res.z1, 4.4401174149901216e+01);
+        assert_eq!(res.x0, 7.359_853_439_380_221);
+        assert_eq!(res.x1, 4.440_117_414_990_121_6e1);
+        assert_eq!(res.y0, 7.359_853_439_380_221);
+        assert_eq!(res.y1, 4.440_117_414_990_121_6e1);
+        assert_eq!(res.z0, 7.359_853_439_380_221);
+        assert_eq!(res.z1, 4.440_117_414_990_121_6e1);
         assert_eq!(res.scaling, Scaling::Scaled);
         let atom1 = Atom {
             id: 3985,
             mol: 1329,
             at_type: 1,
             charge: -1.1128,
-            x: 0.104458,
+            x: 0.104_458,
             y: 0.13216,
-            z: 0.061756,
+            z: 0.061_756,
             vx: 0.,
             vy: 0.,
             vz: 0.,
@@ -838,9 +836,9 @@ ITEM: TIMESTEP
             mol: 1329,
             at_type: 2,
             charge: 0.5564,
-            x: 0.0966852,
+            x: 0.096_685_2,
             y: 0.13005,
-            z: 0.0372016,
+            z: 0.037_201_6,
             vx: 0.,
             vy: 0.,
             vz: 0.,
@@ -868,36 +866,36 @@ ITEM: TIMESTEP
         assert_eq!(res.time, 0);
         assert_eq!(res.n_atoms, 2);
         assert_eq!(res.periodicity, Periodicity::Periodic);
-        assert_eq!(res.x0, 7.7743652754171228e+02);
-        assert_eq!(res.x1, 8.1721825312885755e+02);
-        assert_eq!(res.y0, 7.7743652754171228e+02);
-        assert_eq!(res.y1, 8.1721825312885755e+02);
-        assert_eq!(res.z0, 7.7743652754171228e+02);
-        assert_eq!(res.z1, 8.1721825312885755e+02);
+        assert_eq!(res.x0, 7.774_365_275_417_123e2);
+        assert_eq!(res.x1, 8.172_182_531_288_576e2);
+        assert_eq!(res.y0, 7.774_365_275_417_123e2);
+        assert_eq!(res.y1, 8.172_182_531_288_576e2);
+        assert_eq!(res.z0, 7.774_365_275_417_123e2);
+        assert_eq!(res.z1, 8.172_182_531_288_576e2);
         assert_eq!(res.scaling, Scaling::Scaled);
         let atom1 = Atom {
             id: 1,
             mol: 229,
             at_type: 1,
             charge: 0.,
-            x: 0.214763,
-            y: 0.209893,
-            z: 0.0131017,
-            vx: -0.000827139,
-            vy: 0.000588265,
-            vz: -0.000445509,
+            x: 0.214_763,
+            y: 0.209_893,
+            z: 0.013_101_7,
+            vx: -0.000_827_139,
+            vy: 0.000_588_265,
+            vz: -0.000_445_509,
         };
         let atom2 = Atom {
             id: 2,
             mol: 55,
             at_type: 1,
             charge: 0.,
-            x: 0.0626675,
-            y: 0.829244,
-            z: 0.0980052,
-            vx: -0.000348235,
-            vy: -0.00170769,
-            vz: 0.000164523,
+            x: 0.062_667_5,
+            y: 0.829_244,
+            z: 0.098_005_2,
+            vx: -0.000_348_235,
+            vy: -0.001_707_69,
+            vz: 0.000_164_523,
         };
         assert_eq!(res.atoms[0], atom1);
         assert_eq!(res.atoms[1], atom2);

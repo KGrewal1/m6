@@ -26,11 +26,6 @@ impl MolSystem {
     }
 
     fn bucket(&self, atom_1s: &[&Atom], atom_2s: &[&Atom], resolution: usize, dr: f64) -> Vec<f64> {
-        #[allow(
-            clippy::cast_precision_loss,
-            clippy::cast_possible_truncation,
-            clippy::cast_sign_loss
-        )]
         atom_1s
             .iter()
             .enumerate()
@@ -97,11 +92,6 @@ impl MolSystem {
 
             g_r
         } else {
-            #[allow(
-                clippy::cast_precision_loss,
-                clippy::cast_possible_truncation,
-                clippy::cast_sign_loss
-            )]
             let mut g_r = self
                 .atoms
                 .iter()
@@ -144,11 +134,9 @@ impl MolSystems {
         // let mut sum_g_r = vec![0.0; resolution];
 
         // let cutoff = 0.5;
-        #[allow(clippy::cast_precision_loss)]
+
         let dr = cutoff / ((resolution) as f64); //- 1
-        #[allow(clippy::cast_precision_loss)]
         let radii: Vec<f64> = (0..resolution).map(|i| dr * (i as f64)).collect();
-        #[allow(clippy::cast_precision_loss)]
         let volumes: Vec<f64> = (0..resolution)
             .map(|i| 4. / 3. * PI * ((dr * ((i + 1) as f64)).powi(3) - (dr * (i as f64)).powi(3)))
             .collect();

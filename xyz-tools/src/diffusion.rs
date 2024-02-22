@@ -20,6 +20,8 @@ impl MolSystems {
             .collect()
     }
 }
+
+#[allow(clippy::cast_precision_loss)]
 fn mean_sq_disp(system1: &MolSystem, system2: &MolSystem) -> f64 {
     system1
         .atoms

@@ -101,7 +101,7 @@ mod tests {
 
         let res: MolSystem = input.parse().unwrap();
         let energy = res.potential_enegry(lj_potential);
-        assert_approx_eq!(energy, -173.928427, 1e-6);
+        assert_approx_eq!(energy, -173.928_427, 1e-6);
         // panic!("Total energy: {}", energy);
     }
 }

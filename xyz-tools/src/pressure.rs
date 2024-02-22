@@ -17,7 +17,7 @@ impl MolSystem {
             .iter()
             .enumerate()
             .map(|(i, atom_1)| -> f64 {
-                tke(&atom_1)
+                tke(atom_1)
                     + self
                         .atoms
                         .iter()
@@ -34,7 +34,7 @@ impl MolSystem {
             .par_iter()
             .enumerate()
             .map(|(i, atom_1)| {
-                tke(&atom_1) / 2.
+                tke(atom_1) / 2.
                     + self
                         .atoms
                         .iter()

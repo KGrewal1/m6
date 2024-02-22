@@ -12,14 +12,8 @@ const e_j: f64 = 1.;
 pub fn photon_gas() {
     let vals = (1..=20)
         .par_bridge()
-        .map(|i| 0.1 * i as f64)
-        .map(|beta| {
-            (
-                beta,
-                mc_calc::<MC_STEPS>(beta),
-                1. / ((beta * e_j).exp() - 1.),
-            )
-        })
+        .map(|i| 0.1 * f64::from(i))
+        .map(|beta| (beta, mc_calc::<MC_STEPS>(beta), 1. / (beta * e_j).exp_m1()))
         .collect::<Vec<(f64, f64, f64)>>();
     let (beta, mc_j, exact_j) = transpose(vals);
     let delta = mc_j
@@ -66,15 +60,16 @@ fn mc_calc<const NSTEPS: usize>(beta: f64) -> f64 {
         } else {
             state.saturating_sub(1) // saturating sub dprevents occupancy below
         };
-        let u_init = e_j * state as f64;
-        let u_final = e_j * new_state as f64;
+        let u_init = e_j * f64::from(state);
+        let u_final = e_j * f64::from(new_state);
         let p = (-beta * (u_final - u_init)).exp();
         let final_state = if rng.gen::<f64>() < p {
             new_state
         } else {
             state
         };
-        (sum + (final_state as f64 / NSTEPS as f64), final_state)
+
+        (sum + (f64::from(final_state) / NSTEPS as f64), final_state)
     });
     sum
 }

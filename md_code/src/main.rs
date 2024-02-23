@@ -100,7 +100,7 @@ fn main() {
         let layout = Layout::new()
             .title(Title::new("O-H Autocorrelation of water.xyz"))
             .x_axis(Axis::new().title(Title::new("Distance (Angstroms)")))
-            .y_axis(Axis::new().title(Title::new("g(r)")));
+            .y_axis(Axis::new().title(Title::new("g(r)")).range(vec![0., 2.65]));
         plot.set_layout(layout);
         plot.add_trace(trace);
         #[cfg(feature = "png")]
@@ -177,8 +177,6 @@ fn main() {
             .width(2500)
             .title(Title::new("Autocorrelation of Sets"))
             .x_axis3(Axis::new().title(Title::new("Distance / Angstroms")))
-            // .x_axis2(Axis::new().title(Title::new("Distance (Angstroms)")))
-            // .x_axis(Axis::new().title(Title::new("Distance (Angstroms)")))
             .y_axis(Axis::new().title(Title::new("g(r)")))
             .y_axis2(Axis::new().title(Title::new("g(r)")))
             .y_axis3(Axis::new().title(Title::new("g(r)")));

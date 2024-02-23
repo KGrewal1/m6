@@ -59,25 +59,29 @@ pub fn photon_gas(path: &Path) {
 // calculate the occupation number for the photon gas in a specific state
 fn mc_calc<const NSTEPS: usize>(beta: f64) -> f64 {
     let init_state: u16 = 10;
-    let mut rng = Xoshiro256StarStar::seed_from_u64(42);
-    let (sum, _final_state) = (0..NSTEPS).fold((0_f64, init_state), move |(sum, state), _| {
-        let direction: bool = rng.gen();
-        let new_state = if direction {
-            state.saturating_add(1)
-        } else {
-            state.saturating_sub(1) // saturating sub prevents overflow (unsigned cannot be negative)
-        };
-        let u_init = e_j * f64::from(state);
-        let u_final = e_j * f64::from(new_state);
-        let p = (-beta * (u_final - u_init)).exp();
-        let final_state = if rng.gen::<f64>() < p {
-            new_state
-        } else {
-            state
-        };
+    // let mut rng = Xoshiro256StarStar::seed_from_u64(42);
+    let (sum, _final_state, _rng) = (0..NSTEPS).fold(
+        (0_f64, init_state, Xoshiro256StarStar::seed_from_u64(42)),
+        |(sum, state, rng), _| {
+            let (direction, rng) = gen_bool(rng);
+            let new_state = if direction {
+                state.saturating_add(1)
+            } else {
+                state.saturating_sub(1) // saturating sub prevents overflow (unsigned cannot be negative)
+            };
+            let u_init = e_j * f64::from(state);
+            let u_final = e_j * f64::from(new_state);
+            let p = (-beta * (u_final - u_init)).exp();
+            let (ran_f64, rng) = gen_f64(rng);
+            let final_state = if ran_f64 < p { new_state } else { state };
 
-        (sum + (f64::from(final_state) / NSTEPS as f64), final_state)
-    });
+            (
+                sum + (f64::from(final_state) / NSTEPS as f64),
+                final_state,
+                rng,
+            )
+        },
+    );
     sum
 }
 
@@ -94,4 +98,18 @@ fn transpose(mut v: Vec<(f64, f64, f64)>) -> (Vec<f64>, Vec<f64>, Vec<f64>) {
         c_vec.push(c);
     }
     (a_vec, b_vec, c_vec)
+}
+
+// 'pure functional' rng's just because:
+
+/// pure bool generator
+fn gen_bool(mut rng: Xoshiro256StarStar) -> (bool, Xoshiro256StarStar) {
+    let bool_val: bool = rng.gen();
+    (bool_val, rng)
+}
+
+/// pure f64 generator
+fn gen_f64(mut rng: Xoshiro256StarStar) -> (f64, Xoshiro256StarStar) {
+    let f64_val: f64 = rng.gen();
+    (f64_val, rng)
 }

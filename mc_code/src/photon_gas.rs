@@ -2,6 +2,7 @@
 use plotly::ImageFormat;
 use plotly::{common::Title, layout::Axis, Layout, Plot, Scatter};
 use rand::{Rng, SeedableRng};
+use rand_distr::{Distribution, Standard};
 use rand_xoshiro::Xoshiro256StarStar;
 use rayon::prelude::*;
 use std::path::Path;
@@ -61,9 +62,9 @@ fn mc_calc<const NSTEPS: usize>(beta: f64) -> f64 {
     let init_state: u16 = 10;
 
     let (sum, _final_state, _rng) = (0..NSTEPS).fold(
-        (0_f64, init_state, Xoshiro256StarStar::seed_from_u64(42)),
+        (0_f64, init_state, MonadicRng::new(42)),
         |(sum, state, rng), _| {
-            let (direction, rng) = gen_bool(rng);
+            let (direction, rng) = rng.gen_val();
             let new_state = if direction {
                 state.saturating_add(1)
             } else {
@@ -72,7 +73,7 @@ fn mc_calc<const NSTEPS: usize>(beta: f64) -> f64 {
             let u_init = e_j * f64::from(state);
             let u_final = e_j * f64::from(new_state);
             let p = (-beta * (u_final - u_init)).exp();
-            let (ran_f64, rng) = gen_f64(rng);
+            let (ran_f64, rng) = rng.gen_val::<f64>();
             let final_state = if ran_f64 < p { new_state } else { state };
 
             (
@@ -100,16 +101,19 @@ fn transpose(mut v: Vec<(f64, f64, f64)>) -> (Vec<f64>, Vec<f64>, Vec<f64>) {
     (a_vec, b_vec, c_vec)
 }
 
-// 'pure functional' rng's just because:
+// 'pure functional' rng just because:
+struct MonadicRng(Xoshiro256StarStar);
 
-/// pure bool generator
-fn gen_bool(mut rng: Xoshiro256StarStar) -> (bool, Xoshiro256StarStar) {
-    let bool_val: bool = rng.gen();
-    (bool_val, rng)
-}
+impl MonadicRng {
+    fn new(seed: u64) -> Self {
+        MonadicRng(Xoshiro256StarStar::seed_from_u64(seed))
+    }
 
-/// pure f64 generator
-fn gen_f64(mut rng: Xoshiro256StarStar) -> (f64, Xoshiro256StarStar) {
-    let f64_val: f64 = rng.gen();
-    (f64_val, rng)
+    fn gen_val<T>(mut self) -> (T, MonadicRng)
+    where
+        Standard: Distribution<T>,
+    {
+        let val = self.0.gen();
+        (val, self)
+    }
 }

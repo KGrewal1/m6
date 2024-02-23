@@ -1,4 +1,5 @@
 use rand::{Rng, SeedableRng};
+use rand_distr::{Distribution, Uniform};
 use rand_xoshiro::Xoshiro256StarStar;
 use rayon::prelude::*;
 use std::collections::VecDeque;
@@ -22,9 +23,10 @@ pub fn uniform_sample<F: Fn(f64) -> f64 + Sync>(
     seed: u64,
 ) -> f64 {
     let mut rng = Xoshiro256StarStar::seed_from_u64(seed);
+    let range = Uniform::from(range_bottom..range_top);
     let sum = (0..n_samples)
         .map(|_| {
-            let x = rng.gen_range(range_bottom..range_top);
+            let x = range.sample(&mut rng);
             function(x)
         })
         .sum::<f64>();
@@ -43,10 +45,11 @@ pub fn importance_sample<F: Fn(f64) -> f64 + Sync, G: Fn(f64) -> f64 + Sync>(
     seed: u64,
 ) -> f64 {
     let mut rng = Xoshiro256StarStar::seed_from_u64(seed);
+    let range = Uniform::from(range_bottom..range_top);
     let mut sample_vals = Vec::with_capacity(n_samples);
     while sample_vals.len() != n_samples {
-        let x = rng.gen_range(range_bottom..range_top);
-        let y = rng.gen_range(0.0..1.0);
+        let x = range.sample(&mut rng);
+        let y: f64 = rng.gen();
         let wf = pdf(x);
         if y < wf {
             sample_vals.push(function(x) / wf);

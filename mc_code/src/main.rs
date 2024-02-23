@@ -216,7 +216,6 @@ fn three_x_sq(x: f64) -> f64 {
 }
 
 /// 3x2 inverse cdf
-
 fn three_x_sq_inv_cdf(x: f64) -> f64 {
     x.cbrt()
 }

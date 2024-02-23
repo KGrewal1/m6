@@ -32,6 +32,8 @@ pub fn uniform_sample<F: Fn(f64) -> f64 + Sync>(
     sum / (n_samples as f64)
 }
 
+/// importance sampling, stochastically sampling the weight function,
+/// and then averaging the function values weighted by the inverse of the weight function
 pub fn importance_sample<F: Fn(f64) -> f64 + Sync, G: Fn(f64) -> f64 + Sync>(
     range_bottom: f64,
     range_top: f64,
@@ -54,13 +56,13 @@ pub fn importance_sample<F: Fn(f64) -> f64 + Sync, G: Fn(f64) -> f64 + Sync>(
     sample_vals.par_iter().sum::<f64>() / (n_samples as f64)
 }
 
+/// importance sampling transforming a uniform distribution over [0,1] to the weight function
+/// by using its inverse cdf, and then averaging the function values weighted by the inverse of the weight function
 pub fn importance_sample_alt<
     F: Fn(f64) -> f64 + Sync,
     G: Fn(f64) -> f64 + Sync,
     H: Fn(f64) -> f64 + Sync,
 >(
-    range_bottom: f64,
-    range_top: f64,
     n_samples: usize,
     function: F,
     pdf: G,
@@ -70,7 +72,7 @@ pub fn importance_sample_alt<
     let mut rng = Xoshiro256StarStar::seed_from_u64(seed);
     let sum = (0..n_samples)
         .map(|_| {
-            let x = rng.gen_range(range_bottom..range_top);
+            let x = rng.gen::<f64>();
             let x = inverse_cdf(x);
             function(x) / pdf(x)
         })

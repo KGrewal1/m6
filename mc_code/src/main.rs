@@ -134,9 +134,7 @@ fn main() {
             let now = Instant::now();
             let integrals: Vec<f64> = (1..=1000)
                 .par_bridge()
-                .map(|i| {
-                    importance_sample_alt(0., 1., 1_000_000, three_x_sq, two_x, two_x_inv_cdf, i)
-                })
+                .map(|i| importance_sample_alt(1_000_000, three_x_sq, two_x, two_x_inv_cdf, i))
                 .collect();
 
             let expected_integral = integrals.par_iter().sum::<f64>() / 1000.;
@@ -160,8 +158,6 @@ fn main() {
                 .par_bridge()
                 .map(|i| {
                     importance_sample_alt(
-                        0.,
-                        1.,
                         1_000_000,
                         three_x_sq,
                         four_x_cubed,
@@ -191,15 +187,7 @@ fn main() {
             let integrals: Vec<f64> = (1..=1000)
                 .par_bridge()
                 .map(|i| {
-                    importance_sample_alt(
-                        0.,
-                        1.,
-                        1_000_000,
-                        three_x_sq,
-                        three_x_sq,
-                        three_x_sq_inv_cdf,
-                        i,
-                    )
+                    importance_sample_alt(1_000_000, three_x_sq, three_x_sq, three_x_sq_inv_cdf, i)
                 })
                 .collect();
 

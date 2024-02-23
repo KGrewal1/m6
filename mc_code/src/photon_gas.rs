@@ -11,9 +11,9 @@ const MC_STEPS: usize = 25_000_000;
 const e_j: f64 = 1.;
 
 pub fn photon_gas(path: &Path) {
-    let vals = (1..=20)
+    let vals = (5..=100)
         .par_bridge()
-        .map(|i| 0.1 * f64::from(i))
+        .map(|i| 0.02 * f64::from(i))
         .map(|beta| (beta, mc_calc::<MC_STEPS>(beta), 1. / (beta * e_j).exp_m1()))
         .collect::<Vec<(f64, f64, f64)>>();
     let (beta, mc_j, exact_j) = transpose(vals);

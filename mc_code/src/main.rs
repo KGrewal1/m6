@@ -10,6 +10,7 @@ mod quadrature;
 
 #[allow(clippy::too_many_lines)]
 fn main() {
+    let now_global = Instant::now();
     let plots_dir = Path::new("plots");
     if !plots_dir.exists() {
         fs::create_dir(plots_dir).expect("Unable to create directory");
@@ -208,6 +209,8 @@ fn main() {
 
         println!("MC Ex 2 took {} ms\n", now.elapsed().as_millis());
     }
+
+    println!("MC exercises took {} ms", now_global.elapsed().as_millis());
 }
 
 // 3x2 pdf

@@ -59,7 +59,7 @@ pub fn photon_gas(path: &Path) {
 // calculate the occupation number for the photon gas in a specific state
 fn mc_calc<const NSTEPS: usize>(beta: f64) -> f64 {
     let init_state: u16 = 10;
-    // let mut rng = Xoshiro256StarStar::seed_from_u64(42);
+
     let (sum, _final_state, _rng) = (0..NSTEPS).fold(
         (0_f64, init_state, Xoshiro256StarStar::seed_from_u64(42)),
         |(sum, state, rng), _| {

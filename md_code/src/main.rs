@@ -242,11 +242,12 @@ fn main() {
         println!("Mean KE 3 (J): {:.2}", ke_3);
         println!("Exact KE (J): {:.2}", exact_ke);
         println!("Ex 3.2 took {} ms\n", now.elapsed().as_millis());
-    }
+    } //1.126e-17J expected KE
 
     // --------------------------------
     // 4.1 Pressure through the virial expression
     // --------------------------------
+    // angstroms per emtosecond
 
     {
         let now = Instant::now();

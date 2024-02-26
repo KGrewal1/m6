@@ -25,25 +25,6 @@ impl MolSystem {
         (radii, g_r)
     }
 
-    fn bucket(&self, atom_1s: &[&Atom], atom_2s: &[&Atom], resolution: usize, dr: f64) -> Vec<f64> {
-        atom_1s
-            .iter()
-            .enumerate()
-            .flat_map(|(i, atom_1)| {
-                atom_2s
-                    .iter()
-                    .skip(i + 1)
-                    .map(|atom_2| -> f64 { self.distance(atom_1, atom_2) })
-            })
-            .fold(vec![0.0; resolution], |mut g_r: Vec<f64>, dist| {
-                let i = (dist / dr) as usize; // should never lose sign as both strictly positive
-                if i < resolution {
-                    g_r[i] += 2.0;
-                };
-                g_r
-            })
-    }
-
     fn rdf_internal(
         &self,
         atom_types: Option<(u8, u8)>,
@@ -78,11 +59,38 @@ impl MolSystem {
 
             let mut g_r = if atom_type_1 == atom_type_2 {
                 n_atoms_2 = n_atoms_1;
-                // println!("threads: {}", current_num_threads());
-                self.bucket(&atom_1s, &atom_1s, resolution, dr)
+                atom_1s
+                    .iter()
+                    .enumerate()
+                    .flat_map(|(i, atom_1)| {
+                        atom_1s
+                            .iter()
+                            .skip(i + 1)
+                            .map(|atom_2| -> f64 { self.distance(atom_1, atom_2) })
+                    })
+                    .fold(vec![0.0; resolution], |mut g_r: Vec<f64>, dist| {
+                        let i = (dist / dr) as usize;
+                        if i < resolution {
+                            g_r[i] += 2.0;
+                        };
+                        g_r
+                    })
             } else {
                 n_atoms_2 = atom_2s.len();
-                self.bucket(&atom_1s, &atom_2s, resolution, dr)
+                atom_1s
+                    .iter()
+                    .flat_map(|atom_1| {
+                        atom_2s
+                            .iter()
+                            .map(|atom_2| -> f64 { self.distance(atom_1, atom_2) })
+                    })
+                    .fold(vec![0.0; resolution], |mut g_r: Vec<f64>, dist| {
+                        let i = (dist / dr) as usize;
+                        if i < resolution {
+                            g_r[i] += 1.0;
+                        };
+                        g_r
+                    })
             };
 
             #[allow(clippy::cast_precision_loss)]

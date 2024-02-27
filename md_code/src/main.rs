@@ -228,27 +228,27 @@ fn main() {
         let m = 6.63e-26;
         system.random_v(k_b, temp, m, 3_624_360);
         let ke_1 = system.mean_ke(m);
-        let tke_1 = system.total_ke(m);
+        let total_ke_1 = system.total_ke(m);
 
         system.random_v(k_b, temp, m, 42);
         let ke_2 = system.mean_ke(m);
-        let tke_2 = system.total_ke(m);
+        let total_ke_2 = system.total_ke(m);
 
         system.random_v(k_b, temp, m, 0);
         let ke_3 = system.mean_ke(m);
-        let tke_3 = system.total_ke(m);
+        let total_ke_3 = system.total_ke(m);
 
         let exact_ke = 0.5 * (3. * k_b * temp);
 
         println!("Mean KE 1 (J): {:.5e}", ke_1);
         println!("Implied Temp (K): {:3.2}", ke_1 * 2. / (3. * k_b));
-        println!("Total KE 1 (J): {:.5e}\n", tke_1);
+        println!("Total KE 1 (J): {:.5e}\n", total_ke_1);
         println!("Mean KE 2 (J): {:.5e}", ke_2);
         println!("Implied Temp (K): {:3.2}", ke_2 * 2. / (3. * k_b));
-        println!("Total KE 2 (J): {:.5e}\n", tke_2);
+        println!("Total KE 2 (J): {:.5e}\n", total_ke_2);
         println!("Mean KE 3 (J): {:.5e}", ke_3);
         println!("Implied Temp (K): {:3.2}", ke_3 * 2. / (3. * k_b));
-        println!("Total KE 3 (J): {:.5e}\n", tke_3);
+        println!("Total KE 3 (J): {:.5e}\n", total_ke_3);
         println!("Exact KE (J): {:.5e}", exact_ke);
         println!(
             "Total Exact KE (J): {:.5e}",

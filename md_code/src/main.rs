@@ -10,7 +10,7 @@ use rayon::prelude::*;
 use std::{fs, path::Path, time::Instant};
 use xyz_tools::{Atom, MolSystem, MolSystems};
 
-const k_b: f64 = 1.380_649; // Joules per kelvin
+const k_b: f64 = 1.380_649e-23; // Joules per kelvin
 
 // conversion factor from kcal to joules
 const kcal_to_j: f64 = 4184.;
@@ -204,13 +204,13 @@ fn main() {
             .parse()
             .unwrap();
         let energy = system.potential_enegry(lj_potential);
-        println!("LJ energy (J): {:.2}", energy);
+        println!("LJ energy (J): {:.5e}", energy);
 
         let energy = system.potential_enegry(phs_potential);
-        println!("Pseudo Hard Sphere energy (J): {:.2}", energy);
+        println!("Pseudo Hard Sphere energy (J): {:.5e}", energy);
 
         let energy = system.potential_enegry(yd_potential);
-        println!("Yukawa Debye energy (J): {:.2}", energy);
+        println!("Yukawa Debye energy (J): {:.5e}", energy);
         println!("Ex 3.1 took {} ms\n", now.elapsed().as_millis());
     }
 
@@ -228,19 +228,32 @@ fn main() {
         let m = 6.63e-26;
         system.random_v(k_b, temp, m, 3_624_360);
         let ke_1 = system.mean_ke(m);
+        let tke_1 = system.total_ke(m);
 
         system.random_v(k_b, temp, m, 42);
         let ke_2 = system.mean_ke(m);
+        let tke_2 = system.total_ke(m);
 
         system.random_v(k_b, temp, m, 0);
         let ke_3 = system.mean_ke(m);
+        let tke_3 = system.total_ke(m);
 
         let exact_ke = 0.5 * (3. * k_b * temp);
 
-        println!("Mean KE 1 (J): {:.2}", ke_1);
-        println!("Mean KE 2 (J): {:.2}", ke_2);
-        println!("Mean KE 3 (J): {:.2}", ke_3);
-        println!("Exact KE (J): {:.2}", exact_ke);
+        println!("Mean KE 1 (J): {:.5e}", ke_1);
+        println!("Implied Temp (K): {:3.2}", ke_1 * 2. / (3. * k_b));
+        println!("Total KE 1 (J): {:.5e}\n", tke_1);
+        println!("Mean KE 2 (J): {:.5e}", ke_2);
+        println!("Implied Temp (K): {:3.2}", ke_2 * 2. / (3. * k_b));
+        println!("Total KE 2 (J): {:.5e}\n", tke_2);
+        println!("Mean KE 3 (J): {:.5e}", ke_3);
+        println!("Implied Temp (K): {:3.2}", ke_3 * 2. / (3. * k_b));
+        println!("Total KE 3 (J): {:.5e}\n", tke_3);
+        println!("Exact KE (J): {:.5e}", exact_ke);
+        println!(
+            "Total Exact KE (J): {:.5e}",
+            exact_ke * system.n_atoms as f64
+        );
         println!("Ex 3.2 took {} ms\n", now.elapsed().as_millis());
     } //1.126e-17J expected KE
 

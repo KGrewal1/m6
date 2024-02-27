@@ -25,4 +25,13 @@ impl MolSystem {
             .sum::<f64>()
             / (self.n_atoms as f64)
     }
+
+    /// calculate the total kinetic energy of the system
+    #[must_use]
+    pub fn total_ke(&self, mass: f64) -> f64 {
+        self.atoms
+            .par_iter()
+            .map(|atom| 0.5 * mass * (atom.vx.powi(2) + atom.vy.powi(2) + atom.vz.powi(2)))
+            .sum::<f64>()
+    }
 }

@@ -1,6 +1,4 @@
-use rand::SeedableRng;
-use rand_distr::{Distribution, Uniform};
-use rand_xoshiro::Xoshiro256StarStar;
+use rand_distr::Uniform;
 use rayon::prelude::*;
 use std::collections::VecDeque;
 
@@ -8,10 +6,10 @@ use crate::monad_rng::{MonadicRng, UniformMonad};
 
 pub fn trapezoidal<F: Fn(f64) -> f64 + Sync>(mut range: VecDeque<f64>, function: F) -> f64 {
     let n_segments = range.len() - 1;
-    let n_0 = range.pop_front().unwrap_or(0.);
-    let f_0 = function(n_0) / 2.;
-    let n_fin = range.pop_back().unwrap_or(0.);
-    let f_fin = function(n_fin) / 2.;
+    let f_0 = range.pop_front().map(|x| function(x) / 2.).unwrap_or(0.);
+
+    let f_fin = range.pop_back().map(|x| function(x) / 2.).unwrap_or(0.);
+
     let sum_centre = range.par_iter().map(|x| function(*x)).sum::<f64>();
 
     (f_0 + f_fin + sum_centre) / (n_segments as f64)
@@ -24,14 +22,12 @@ pub fn uniform_sample<F: Fn(f64) -> f64 + Sync>(
     function: F,
     seed: u64,
 ) -> f64 {
-    let mut rng = Xoshiro256StarStar::seed_from_u64(seed);
-    let range = Uniform::from(range_bottom..range_top);
-    let sum = (0..n_samples)
-        .map(|_| {
-            let x = range.sample(&mut rng);
-            function(x)
-        })
-        .sum::<f64>();
+    let rng = MonadicRng::new(seed);
+    let range = UniformMonad::new(Uniform::from(range_bottom..range_top));
+    let (sum, _rng) = (0..n_samples).fold((0., rng), |(sum, rng), _| {
+        let (x, rng) = range.sample(rng);
+        (sum + function(x), rng)
+    });
 
     sum / (n_samples as f64)
 }
@@ -48,7 +44,7 @@ pub fn importance_sample<F: Fn(f64) -> f64 + Sync, G: Fn(f64) -> f64 + Sync>(
 ) -> f64 {
     let rng = MonadicRng::new(seed);
     let range = UniformMonad::new(Uniform::from(range_bottom..range_top));
-    // let mut sample_vals = Vec::with_capacity(n_samples);
+
     let (init_pos, rng) = range.sample(rng);
     let init_wf = pdf(init_pos);
     let (sum, _final_pos, _final_wf, _rng) =

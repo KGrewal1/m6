@@ -1,10 +1,9 @@
-use std::{collections::VecDeque, fs, path::Path, time::Instant};
-
+use crate::quadrature::{importance_sample, importance_sample_alt, uniform_sample};
 use quadrature::trapezoidal;
 use rayon::iter::{IntoParallelRefIterator, ParallelBridge, ParallelIterator};
+use std::{collections::VecDeque, fs, path::Path, time::Instant};
 
-use crate::quadrature::{importance_sample, importance_sample_alt, uniform_sample};
-
+mod monad_rng;
 mod photon_gas;
 mod quadrature;
 

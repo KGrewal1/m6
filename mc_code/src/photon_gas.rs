@@ -1,11 +1,10 @@
 #[cfg(feature = "png")]
 use plotly::ImageFormat;
 use plotly::{common::Title, layout::Axis, Layout, Plot, Scatter};
-use rand::{Rng, SeedableRng};
-use rand_distr::{Distribution, Standard};
-use rand_xoshiro::Xoshiro256StarStar;
 use rayon::prelude::*;
 use std::path::Path;
+
+use crate::monad_rng::MonadicRng;
 
 const MC_STEPS: usize = 25_000_000;
 #[allow(non_upper_case_globals)]
@@ -99,21 +98,4 @@ fn transpose(mut v: Vec<(f64, f64, f64)>) -> (Vec<f64>, Vec<f64>, Vec<f64>) {
         c_vec.push(c);
     }
     (a_vec, b_vec, c_vec)
-}
-
-// 'pure functional' rng just because:
-struct MonadicRng(Xoshiro256StarStar);
-
-impl MonadicRng {
-    fn new(seed: u64) -> Self {
-        MonadicRng(Xoshiro256StarStar::seed_from_u64(seed))
-    }
-
-    fn gen_val<T>(mut self) -> (T, MonadicRng)
-    where
-        Standard: Distribution<T>,
-    {
-        let val = self.0.gen();
-        (val, self)
-    }
 }

@@ -6,9 +6,9 @@ use crate::monad_rng::{MonadicRng, UniformMonad};
 
 pub fn trapezoidal<F: Fn(f64) -> f64 + Sync>(mut range: VecDeque<f64>, function: F) -> f64 {
     let n_segments = range.len() - 1;
-    let f_0 = range.pop_front().map(|x| function(x) / 2.).unwrap_or(0.);
+    let f_0 = range.pop_front().map_or(0., |x| function(x) / 2.);
 
-    let f_fin = range.pop_back().map(|x| function(x) / 2.).unwrap_or(0.);
+    let f_fin = range.pop_back().map_or(0., |x| function(x) / 2.);
 
     let sum_centre = range.par_iter().map(|x| function(*x)).sum::<f64>();
 

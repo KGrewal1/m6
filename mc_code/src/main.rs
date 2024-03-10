@@ -1,5 +1,10 @@
-use crate::quadrature::{importance_sample, importance_sample_alt, uniform_sample};
+use crate::{
+    monad_rng::MonadicRng,
+    quadrature::{importance_sample, importance_sample_alt, uniform_sample},
+};
 use quadrature::trapezoidal;
+use rand::SeedableRng;
+use rand_xoshiro::Xoshiro256StarStar;
 use rayon::iter::{IntoParallelRefIterator, ParallelBridge, ParallelIterator};
 use std::{collections::VecDeque, fs, path::Path, time::Instant};
 
@@ -43,8 +48,16 @@ fn main() {
         {
             let now = Instant::now();
             let integrals: Vec<f64> = (1..=1000)
+                .map({
+                    let mut rng = Xoshiro256StarStar::seed_from_u64(42);
+                    move |_| {
+                        rng.jump();
+                        rng.clone()
+                    }
+                })
+                .map(|rng| MonadicRng::from_rng(rng))
                 .par_bridge()
-                .map(|i| uniform_sample(0., 1., 1_000_000, three_x_sq, i))
+                .map(|rng| uniform_sample(0., 1., 1_000_000, three_x_sq, rng))
                 .collect();
 
             let expected_integral = integrals.par_iter().sum::<f64>() / 1000.;
@@ -65,8 +78,16 @@ fn main() {
         {
             let now = Instant::now();
             let integrals: Vec<f64> = (1..=1000)
+                .map({
+                    let mut rng = Xoshiro256StarStar::seed_from_u64(42);
+                    move |_| {
+                        rng.jump();
+                        rng.clone()
+                    }
+                })
+                .map(|rng| MonadicRng::from_rng(rng))
                 .par_bridge()
-                .map(|i| importance_sample(0., 1., 1_000_000, three_x_sq, two_x, i))
+                .map(|rng| importance_sample(0., 1., 1_000_000, three_x_sq, two_x, rng))
                 .collect();
 
             let expected_integral = integrals.par_iter().sum::<f64>() / 1000.;
@@ -87,8 +108,16 @@ fn main() {
         {
             let now = Instant::now();
             let integrals: Vec<f64> = (1..=1000)
+                .map({
+                    let mut rng = Xoshiro256StarStar::seed_from_u64(42);
+                    move |_| {
+                        rng.jump();
+                        rng.clone()
+                    }
+                })
+                .map(|rng| MonadicRng::from_rng(rng))
                 .par_bridge()
-                .map(|i| importance_sample(0., 1., 1_000_000, three_x_sq, four_x_cubed, i))
+                .map(|rng| importance_sample(0., 1., 1_000_000, three_x_sq, four_x_cubed, rng))
                 .collect();
 
             let expected_integral = integrals.par_iter().sum::<f64>() / 1000.;
@@ -109,8 +138,16 @@ fn main() {
         {
             let now = Instant::now();
             let integrals: Vec<f64> = (1..=1000)
+                .map({
+                    let mut rng = Xoshiro256StarStar::seed_from_u64(42);
+                    move |_| {
+                        rng.jump();
+                        rng.clone()
+                    }
+                })
+                .map(|rng| MonadicRng::from_rng(rng))
                 .par_bridge()
-                .map(|i| importance_sample(0., 1., 1_000_000, three_x_sq, three_x_sq, i))
+                .map(|rng| importance_sample(0., 1., 1_000_000, three_x_sq, three_x_sq, rng))
                 .collect();
 
             let expected_integral = integrals.par_iter().sum::<f64>() / 1000.;
@@ -133,8 +170,16 @@ fn main() {
         {
             let now = Instant::now();
             let integrals: Vec<f64> = (1..=1000)
+                .map({
+                    let mut rng = Xoshiro256StarStar::seed_from_u64(42);
+                    move |_| {
+                        rng.jump();
+                        rng.clone()
+                    }
+                })
+                .map(|rng| MonadicRng::from_rng(rng))
                 .par_bridge()
-                .map(|i| importance_sample_alt(1_000_000, three_x_sq, two_x, two_x_inv_cdf, i))
+                .map(|rng| importance_sample_alt(1_000_000, three_x_sq, two_x, two_x_inv_cdf, rng))
                 .collect();
 
             let expected_integral = integrals.par_iter().sum::<f64>() / 1000.;
@@ -155,14 +200,22 @@ fn main() {
         {
             let now = Instant::now();
             let integrals: Vec<f64> = (1..=1000)
+                .map({
+                    let mut rng = Xoshiro256StarStar::seed_from_u64(42);
+                    move |_| {
+                        rng.jump();
+                        rng.clone()
+                    }
+                })
+                .map(|rng| MonadicRng::from_rng(rng))
                 .par_bridge()
-                .map(|i| {
+                .map(|rng| {
                     importance_sample_alt(
                         1_000_000,
                         three_x_sq,
                         four_x_cubed,
                         four_x_cubed_inv_cdf,
-                        i,
+                        rng,
                     )
                 })
                 .collect();
@@ -185,9 +238,23 @@ fn main() {
         {
             let now = Instant::now();
             let integrals: Vec<f64> = (1..=1000)
+                .map({
+                    let mut rng = Xoshiro256StarStar::seed_from_u64(42);
+                    move |_| {
+                        rng.jump();
+                        rng.clone()
+                    }
+                })
+                .map(|rng| MonadicRng::from_rng(rng))
                 .par_bridge()
-                .map(|i| {
-                    importance_sample_alt(1_000_000, three_x_sq, three_x_sq, three_x_sq_inv_cdf, i)
+                .map(|rng| {
+                    importance_sample_alt(
+                        1_000_000,
+                        three_x_sq,
+                        three_x_sq,
+                        three_x_sq_inv_cdf,
+                        rng,
+                    )
                 })
                 .collect();
 

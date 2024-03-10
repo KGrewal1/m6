@@ -20,9 +20,9 @@ pub fn uniform_sample<F: Fn(f64) -> f64 + Sync>(
     range_top: f64,
     n_samples: usize,
     function: F,
-    seed: u64,
+    rng: MonadicRng,
 ) -> f64 {
-    let rng = MonadicRng::new(seed);
+    // let rng = MonadicRng::new(seed);
     let range = UniformMonad::new(Uniform::from(range_bottom..range_top));
     let (sum, _rng) = (0..n_samples).fold((0., rng), |(sum, rng), _| {
         let (x, rng) = range.sample(rng);
@@ -40,9 +40,9 @@ pub fn importance_sample<F: Fn(f64) -> f64 + Sync, G: Fn(f64) -> f64 + Sync>(
     n_samples: usize,
     function: F,
     pdf: G,
-    seed: u64,
+    rng: MonadicRng,
 ) -> f64 {
-    let rng = MonadicRng::new(seed);
+    // let rng = MonadicRng::new(seed);
     let range = UniformMonad::new(Uniform::from(range_bottom..range_top));
 
     let (init_pos, rng) = range.sample(rng);
@@ -73,9 +73,9 @@ pub fn importance_sample_alt<
     function: F,
     pdf: G,
     inverse_cdf: H,
-    seed: u64,
+    rng: MonadicRng,
 ) -> f64 {
-    let rng = MonadicRng::new(seed);
+    // let rng = MonadicRng::new(seed);
     let (sum, _rng) = (0..n_samples).fold((0_f64, rng), |(sum, rng), _| {
         let (x, rng) = rng.gen_val::<f64>();
         let x = inverse_cdf(x);

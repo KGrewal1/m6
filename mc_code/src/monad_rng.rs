@@ -9,6 +9,10 @@ impl MonadicRng {
         MonadicRng(Xoshiro256StarStar::seed_from_u64(seed))
     }
 
+    pub fn from_rng(rng: Xoshiro256StarStar) -> Self {
+        MonadicRng(rng)
+    }
+
     pub fn gen_val<T>(mut self) -> (T, MonadicRng)
     where
         Standard: Distribution<T>,

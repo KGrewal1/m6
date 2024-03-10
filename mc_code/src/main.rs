@@ -55,7 +55,7 @@ fn main() {
                         rng.clone()
                     }
                 })
-                .map(|rng| MonadicRng::from_rng(rng))
+                .map(MonadicRng::from_rng)
                 .par_bridge()
                 .map(|rng| uniform_sample(0., 1., 1_000_000, three_x_sq, rng))
                 .collect();
@@ -85,7 +85,7 @@ fn main() {
                         rng.clone()
                     }
                 })
-                .map(|rng| MonadicRng::from_rng(rng))
+                .map(MonadicRng::from_rng)
                 .par_bridge()
                 .map(|rng| importance_sample(0., 1., 1_000_000, three_x_sq, two_x, rng))
                 .collect();
@@ -115,7 +115,7 @@ fn main() {
                         rng.clone()
                     }
                 })
-                .map(|rng| MonadicRng::from_rng(rng))
+                .map(MonadicRng::from_rng)
                 .par_bridge()
                 .map(|rng| importance_sample(0., 1., 1_000_000, three_x_sq, four_x_cubed, rng))
                 .collect();
@@ -145,7 +145,7 @@ fn main() {
                         rng.clone()
                     }
                 })
-                .map(|rng| MonadicRng::from_rng(rng))
+                .map(MonadicRng::from_rng)
                 .par_bridge()
                 .map(|rng| importance_sample(0., 1., 1_000_000, three_x_sq, three_x_sq, rng))
                 .collect();
@@ -177,7 +177,7 @@ fn main() {
                         rng.clone()
                     }
                 })
-                .map(|rng| MonadicRng::from_rng(rng))
+                .map(MonadicRng::from_rng)
                 .par_bridge()
                 .map(|rng| importance_sample_alt(1_000_000, three_x_sq, two_x, two_x_inv_cdf, rng))
                 .collect();
@@ -207,7 +207,7 @@ fn main() {
                         rng.clone()
                     }
                 })
-                .map(|rng| MonadicRng::from_rng(rng))
+                .map(MonadicRng::from_rng)
                 .par_bridge()
                 .map(|rng| {
                     importance_sample_alt(
@@ -245,7 +245,7 @@ fn main() {
                         rng.clone()
                     }
                 })
-                .map(|rng| MonadicRng::from_rng(rng))
+                .map(MonadicRng::from_rng)
                 .par_bridge()
                 .map(|rng| {
                     importance_sample_alt(

@@ -370,6 +370,7 @@ fn main() {
     // --------------------------------
 
     {
+        // 0.02348 sigma^2 / tau
         let now = Instant::now();
         // for diffusion question: fp maths not callable from const context
         let tau_diff: f64 = (6.63e-26 * sigma_diff.powi(2) / (0.24 * kcal_to_j)).sqrt() * 1e12; // femtoseconds
@@ -378,7 +379,7 @@ fn main() {
             .parse()
             .unwrap();
 
-        let times = (0..systems.len()).map(|i| 2 * i).collect::<Vec<_>>();
+        let times = (0..systems.len()).map(|i| 20_000 * i).collect::<Vec<_>>();
         let msds = systems.diffusion();
         let tt = times.par_iter().map(|t| (t * t) as f64).sum::<f64>();
         let mt = times
@@ -386,8 +387,8 @@ fn main() {
             .zip(msds.par_iter())
             .map(|(t, msd)| *t as f64 * msd)
             .sum::<f64>();
-        println!("slope = {:.5}", mt / tt);
-        println!("D = {:.5}", (mt / sigma_diff) / (tt * 2. / tau_diff));
+        println!("slope = {:5e}", mt / tt);
+        println!("D = {:5e}", (mt / sigma_diff) / (tt * 2. / tau_diff));
         let mut plot = Plot::new();
         let trace = Scatter::new(times, msds).name("Diffuson of A");
         let layout = Layout::new()
@@ -417,7 +418,7 @@ fn main() {
             .parse()
             .unwrap();
 
-        let times = (0..systems.len()).map(|i| 2 * i).collect::<Vec<_>>();
+        let times = (0..systems.len()).map(|i| 20_000 * i).collect::<Vec<_>>();
         let msds = systems.diffusion();
         let tt = times.par_iter().map(|t| (t * t) as f64).sum::<f64>();
         let mt = times
@@ -425,8 +426,8 @@ fn main() {
             .zip(msds.par_iter())
             .map(|(t, msd)| *t as f64 * msd)
             .sum::<f64>();
-        println!("slope = {:.5}", mt / tt);
-        println!("D = {:.5}", (mt / sigma_diff) / (tt * 2. / tau_diff));
+        println!("slope = {:5e}", mt / tt);
+        println!("D = {:5e}", (mt / sigma_diff) / (tt * 2. / tau_diff));
         println!("This however may not be the most valid straight line fit");
         let mut plot = Plot::new();
         let trace = Scatter::new(times, msds).name("Diffuson of B");
